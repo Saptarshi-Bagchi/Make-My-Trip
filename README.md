@@ -6,8 +6,6 @@ The application allows users to explore travel options, manage bookings, and int
 ## 🚀 Features
 
 - User registration and authentication
-- Search and manage travel options
-- Hotel/flight booking functionality
 - Booking management system
 - RESTful APIs for frontend-backend communication
 - MongoDB-based data storage
@@ -18,7 +16,7 @@ The application allows users to explore travel options, manage bookings, and int
 ### Backend
 - Java
 - Spring Boot
-- Spring Data MongoDB
+- MongoDB
 - REST APIs
 
 ### Tools
@@ -32,3 +30,4 @@ The application allows users to explore travel options, manage bookings, and int
 
 ```bash
 git clone https://github.com/Saptarshi-Bagchi/Make-My-Trip
+
