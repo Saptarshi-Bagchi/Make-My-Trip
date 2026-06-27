@@ -23,6 +23,10 @@ The application allows users to explore travel options, manage bookings, and int
 - Maven
 - Git & GitHub
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2861e5b7c055a85a6f142ea3c903995ea3163fb4
 ## ⚙️ Installation & Setup
 
 ### 1. Clone the repository
@@ -55,6 +59,13 @@ mvn spring-boot:run
 http://localhost:8080
 ```
 
+<<<<<<< HEAD
 ## ✉️ License
 
 This project is made for educational purposes.
+=======
+
+## ✉️ License
+
+This project is made for educational purposes.
+>>>>>>> 2861e5b7c055a85a6f142ea3c903995ea3163fb4
