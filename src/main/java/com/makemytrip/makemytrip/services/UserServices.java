@@ -1,0 +1,23 @@
+package com.makemytrip.makemytrip.services;
+
+import com.makemytrip.makemytrip.models.Users;
+import com.makemytrip.makemytrip.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServices{
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public User login(string email, String password){
+        Users user = userRepository.findByEmail(email);
+        if(user!=null && passwordEncoder.matches(password,user.getPassword())){
+            return user;
+        }
+        return null;
+    }
+}

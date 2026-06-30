@@ -1,4 +1,4 @@
-package com.makemytrip.makemytripf;
+package com.makemytrip.makemytrip;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
