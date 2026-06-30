@@ -25,6 +25,10 @@ public class UserServices{
         if(userRepository.findByEmail(user.getEmail())!=null){
             throw new RuntimeException("Email is already registered");
         }
-        return null;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole()==null){
+            user.setRole("USER");
+        }
+        return userRepository.save(user);
     }
 }
