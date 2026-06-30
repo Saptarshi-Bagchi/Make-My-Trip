@@ -13,10 +13,17 @@ public class UserServices{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User login(string email, String password){
+    public Users login(String email, String password){
         Users user = userRepository.findByEmail(email);
         if(user!=null && passwordEncoder.matches(password,user.getPassword())){
             return user;
+        }
+        return null;
+    }
+
+    public Users Signup(Users user){
+        if(userRepository.findByEmail(user.getEmail())!=null){
+            throw new RuntimeException("Email is already registered");
         }
         return null;
     }

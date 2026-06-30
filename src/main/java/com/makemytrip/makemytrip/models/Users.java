@@ -14,4 +14,7 @@ public class Users {
     private String password;
     private String role;
     private String phoneNumber;    
+
+    public String getPassword() {return password;}
+    public String getEmail() {return email;}
 }

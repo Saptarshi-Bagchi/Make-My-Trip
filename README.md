@@ -14,7 +14,6 @@ The application allows users to explore travel options, manage bookings, and int
 ## 🛠️ Tech Stack
 
 ### Backend
-- Java
 - Spring Boot
 - MongoDB
 - REST APIs
@@ -23,7 +22,6 @@ The application allows users to explore travel options, manage bookings, and int
 - Maven
 - Git & GitHub
 
-=======
 
 ## ⚙️ Installation & Setup
 
