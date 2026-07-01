@@ -8,6 +8,7 @@ import com.makemytrip.makemytrip.services.UserServices;;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "*")
 public class UserController {
     @Autowired
     private UserServices userServices;
