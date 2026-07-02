@@ -1,7 +1,7 @@
 # MakeMyTrip Clone ✈️
 
-A full-stack travel booking platform inspired by MakeMyTrip, built using **Spring Boot** and **MongoDB**.  
-The application allows users to explore travel options, manage bookings, and interact with a scalable backend system.
+A full-stack travel booking platform inspired by MakeMyTrip, built using **Spring Boot**, **MongoDB**, and **Next.js**.  
+The application allows users to explore travel options, manage bookings, and interact with a scalable backend system through a modern, responsive UI.
 
 ## 🚀 Features
 
@@ -10,6 +10,7 @@ The application allows users to explore travel options, manage bookings, and int
 - RESTful APIs for frontend-backend communication
 - MongoDB-based data storage
 - Scalable Spring Boot backend architecture
+- Responsive, accessible UI built with shadcn/ui components
 
 ## 🛠️ Tech Stack
 
@@ -18,10 +19,14 @@ The application allows users to explore travel options, manage bookings, and int
 - MongoDB
 - REST APIs
 
+### Frontend
+- Next.js
+- shadcn/ui
+- Tailwind CSS
+
 ### Tools
 - Maven
 - Git & GitHub
-
 
 ## ⚙️ Installation & Setup
 
@@ -37,23 +42,51 @@ git clone https://github.com/Saptarshi-Bagchi/Make-My-Trip
 cd makemytrip
 ```
 
-### 3. Configure MongoDB connection in application.properties
+### Backend Setup
 
-```bash
-spring.data.mongodb.url=<mongoDB URL>
-```
+1. Configure MongoDB connection in `application.properties`:
 
-### 4. Run the application
+    ```bash
+    spring.data.mongodb.url=<mongoDB URL>
+    ```
 
-```bash
-mvn spring-boot:run
-```
+2. Run the application:
 
-### 5. Access the application
+    ```bash
+    mvn spring-boot:run
+    ```
 
-```bash
-http://localhost:8080
-```
+3. Backend runs at:
+
+    ```bash
+    http://localhost:8080
+    ```
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+
+    ```bash
+    cd frontend
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+3. Run the development server:
+
+    ```bash
+    npm run dev
+    ```
+
+4. Access the app at:
+
+    ```bash
+    http://localhost:3000
+    ```
 
 ## ✉️ License
 
