@@ -1,4 +1,4 @@
-package com.makemytrip.makemytripf;
+package com.makemytrip.makemytrip;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

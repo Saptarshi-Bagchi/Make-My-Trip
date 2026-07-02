@@ -1,5 +1,5 @@
 import { Plane } from "lucide-react"
-import SignupDialog from "@/components/ui/SignupDialog";
+import SignupDialog from "@/pages/SignupDialog";
 
 export default function Home() {
   return (
