@@ -1,5 +1,5 @@
 import { Plane } from "lucide-react"
-import SignupDialog from "@/pages/SignupDialog";
+import SignupDialog from "@/components/SignupDialog";
 
 export default function Home() {
   return (
@@ -12,12 +12,12 @@ export default function Home() {
     >
       <div className="min-h-screen bg-gradient-to-b from-black/50 to-blue-900/50 backdrop-blur-[2px]">
         <header className="bg-black/20 backdrop-blur-md py-4 sticky top-0 z-50">
-          <div className="container mx-auto px-4 flex item-center justify-between">
+          <div className="container mx-auto px-4 flex items-center justify-between">
             <div className="flex items-center space-x-2 text-white">
               <Plane className="w-8 h-8 text-red-500" />
-              <span className="text-2x1 font-bold">MakeMyTour</span>
+              <span className="text-2xl font-bold">MakeMyTour</span>
             </div>
-            <div className="flex item-center space-x-4">
+            <div className="flex items-center space-x-4">
               <SignupDialog />
             </div>
           </div>
