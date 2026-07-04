@@ -67,7 +67,7 @@ cd makemytrip
 1. Navigate to the frontend directory:
 
     ```bash
-    cd frontend
+    cd makemytour
     ```
 
 2. Install dependencies:
