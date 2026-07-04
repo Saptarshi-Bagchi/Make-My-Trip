@@ -3,6 +3,8 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
+import { signup, login } from '../api';
+import { setUser } from '@/store';
 
 const SignupDialog = () => {
     const [isSignup, setIsSignup] = useState(true);
@@ -11,19 +13,21 @@ const SignupDialog = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const handleAuth=async(e:React.FormEvent)=>{
+    const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault()
-        if(isSignup){
-            console.log(firstName,lastName,phoneNumber,email,password)
+        if (isSignup) {
+            const signin = await signup(firstName, lastName, phoneNumber, email, password);
+            setUser(signin);
         }
-        else{
-            console.log(email,password)
+        else {
+            const data = await login(email, password);
+            setUser(data);
         }
     }
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button 
+                <Button
                     variant="outline"
                     className="bg-white text-black hover:bg-gray-200"
                 >
@@ -117,7 +121,7 @@ const SignupDialog = () => {
                             </Button>
                         </>
 
-                    ):(
+                    ) : (
                         <>
                             Don't have an account?{" "}
                             <Button
@@ -125,7 +129,7 @@ const SignupDialog = () => {
                                 className="p-0 text-blue-600"
                                 onClick={() => setIsSignup(true)}
                             >
-                                    Sign Up
+                                Sign Up
                             </Button>
                         </>
                     )}

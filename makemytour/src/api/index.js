@@ -1,0 +1,34 @@
+import axios from "axios"
+
+const BACKEND_URL = "https://localhost:8080"
+
+export const login = async (email, password) => {
+    try {
+        const url = `${BACKEND_URL}/user/login?=${email}&password=${password}`
+        const res = await axios.post(url);
+        const data = res.data
+        console.log(data)
+        return data
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const signup = async (firstName, lastName, phoneNumber, email, password) => {
+    try {
+        const res = await axios.post(`${BACKEND_URL}/user/signup`, {
+            firstName, 
+            LastName, 
+            phoneNumber, 
+            email, 
+            password
+        });
+        const data = res.data
+        console.log(data)
+        return data
+    }
+    catch (error) {
+        throw error;
+    }
+}
