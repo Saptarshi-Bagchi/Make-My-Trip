@@ -4,7 +4,7 @@ const BACKEND_URL = "https://localhost:8080"
 
 export const login = async (email, password) => {
     try {
-        const url = `${BACKEND_URL}/user/login?=${email}&password=${password}`
+        const url = `${BACKEND_URL}/user/login?email=${email}&password=${password}`
         const res = await axios.post(url);
         const data = res.data
         console.log(data)
@@ -19,7 +19,7 @@ export const signup = async (firstName, lastName, phoneNumber, email, password) 
     try {
         const res = await axios.post(`${BACKEND_URL}/user/signup`, {
             firstName, 
-            LastName, 
+            lastName, 
             phoneNumber, 
             email, 
             password
