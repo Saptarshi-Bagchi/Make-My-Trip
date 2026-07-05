@@ -10,6 +10,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Navbar = () => {
     const user = useSelector((state: any) => state.user.user);
@@ -21,7 +23,34 @@ const Navbar = () => {
                     <span className="text-2xl font-bold">MakeMyTour</span>
                 </div>
                 <div className="flex items-center space-x-4">
-                    {user ? (<></>) : <SignupDialog />}
+                    {user ? (<>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button>
+                                    <Avatar>
+                                        <AvatarFallback>{user?.name.chatAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuLabel>
+                                    <div>
+                                        <p>{user.firstName}</p>
+                                        <p>{user.email}</p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator/>
+                                <DropdownMenuItem>
+                                    <LogOut/>
+                                    <span>Profile</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <LogOut/>
+                                    <span>Logout</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </>) : <SignupDialog />}
                 </div>
             </div>
         </header>
