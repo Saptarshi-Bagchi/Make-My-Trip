@@ -5,6 +5,7 @@ import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { signup, login } from '../api';
 import { setUser } from '@/store';
+import { useDispatch } from 'react-redux';
 
 const SignupDialog = () => {
     const [isSignup, setIsSignup] = useState(true);
@@ -13,15 +14,16 @@ const SignupDialog = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const dispatch = useDispatch();
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault()
         if (isSignup) {
             const signin = await signup(firstName, lastName, phoneNumber, email, password);
-            setUser(signin);
+            dispatch(setUser(signin));
         }
         else {
             const data = await login(email, password);
-            setUser(data);
+            dispatch(setUser(data));
         }
     }
     return (
