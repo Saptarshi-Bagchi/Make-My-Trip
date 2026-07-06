@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LogOut,User } from "lucide-react";
 
 const Navbar = () => {
     const user = useSelector((state: any) => state.user.user);
@@ -26,26 +27,33 @@ const Navbar = () => {
                     {user ? (<>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button>
-                                    <Avatar>
+                                <Button
+                                    variant="ghost"
+                                    className="relative h-8 w-8 rounded-full"
+                                >
+                                    <Avatar className="h-8 w-8">
                                         <AvatarFallback>{user?.name.chatAt(0)}</AvatarFallback>
                                     </Avatar>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuLabel>
-                                    <div>
-                                        <p>{user.firstName}</p>
-                                        <p>{user.email}</p>
+                            <DropdownMenuContent className="w-56" align="end" forceMount>
+                                <DropdownMenuLabel className="font-normal">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium leading-none">
+                                            {user.firstName}
+                                        </p>
+                                        <p className="text-xs leading-none text-muted-foreground">
+                                            {user.email}
+                                        </p>
                                     </div>
                                 </DropdownMenuLabel>
-                                <DropdownMenuSeparator/>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem>
-                                    <LogOut/>
+                                    <User className="mr-2 h-4 w-4" />
                                     <span>Profile</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                    <LogOut/>
+                                    <LogOut className="mr-2 h-4 w-4" />
                                     <span>Logout</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
