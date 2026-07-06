@@ -8,6 +8,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <div className="min-h-screen">
       <Component {...pageProps} />
+      </div>
     </Provider>
   );
 }
