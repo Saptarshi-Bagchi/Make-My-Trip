@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut,User } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "@/store";
 import { useRouter } from "next/navigation";
@@ -56,11 +56,11 @@ const Navbar = () => {
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={()=>router.push('/profile')}>
+                                <DropdownMenuItem onClick={() => router.push("/profile")}>
                                     <User className="mr-2 h-4 w-4" />
                                     <span>Profile</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={()=>logout()}>
+                                <DropdownMenuItem onClick={() => logout()}>
                                     <LogOut className="mr-2 h-4 w-4" />
                                     <span>Logout</span>
                                 </DropdownMenuItem>
