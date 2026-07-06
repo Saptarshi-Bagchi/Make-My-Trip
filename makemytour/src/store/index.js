@@ -1,18 +1,19 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 const getuserfromlocalstorage = () => {
-
-    const storeduser = localStorage.getItem("user");
-    return storeduser ? JSON.parse(storeduser) : null
-
+    if (typeof window !== "undefined") {
+        const storeduser = localStorage.getItem("user");
+        return storeduser ? JSON.parse(storeduser) : null;
+    }
+    return null;
 }
 const saveusertolocalstorage = (user) => {
-
-    localStorage.setItem('user', JSON.stringify(user))
-
+    if (typeof window !== "undefined") {
+        localStorage.setItem("user", JSON.stringify(user));
+    }
 }
 const initialState = {
-    user: getuserfromlocalstorage(),
+    user: null,
 }
 
 const userSlice = createSlice({
@@ -24,8 +25,10 @@ const userSlice = createSlice({
             saveusertolocalstorage(action.payload)
         },
         clearUser: (state) => {
-            state.user = null
-            localStorage.removeItem("user");
+            state.user = null;
+            if (typeof window !== "undefined") {
+                localStorage.removeItem("user");
+            }
         }
     }
 })

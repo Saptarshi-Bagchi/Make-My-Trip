@@ -13,9 +13,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { LogOut,User } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { clearUser } from "@/store";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+    const dispatch = useDispatch();
     const user = useSelector((state: any) => state.user.user);
+    const router = useRouter();
+    const logout = () => {
+        dispatch(clearUser());
+    };
     return (
         <header className="bg-black/20 backdrop-blur-md py-4 sticky top-0 z-50">
             <div className="container mx-auto px-4 flex items-center justify-between">
@@ -32,7 +40,7 @@ const Navbar = () => {
                                     className="relative h-8 w-8 rounded-full"
                                 >
                                     <Avatar className="h-8 w-8">
-                                        <AvatarFallback>{user?.name.chatAt(0)}</AvatarFallback>
+                                        <AvatarFallback>{user?.firstName.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 </Button>
                             </DropdownMenuTrigger>
@@ -48,11 +56,11 @@ const Navbar = () => {
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={()=>router.push('/profile')}>
                                     <User className="mr-2 h-4 w-4" />
                                     <span>Profile</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={()=>logout()}>
                                     <LogOut className="mr-2 h-4 w-4" />
                                     <span>Logout</span>
                                 </DropdownMenuItem>
