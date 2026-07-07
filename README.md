@@ -47,7 +47,7 @@ cd makemytrip
 1. Configure MongoDB connection in `application.properties`:
 
     ```bash
-    spring.data.mongodb.url=<mongoDB URL>
+    spring.data.mongodb.uri=<mongoDB URL>
     ```
 
 2. Run the application:
