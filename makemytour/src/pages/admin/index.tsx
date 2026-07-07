@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Tabs,TabsList,TabsTrigger } from "@/components/ui/tabs";
+import { Tabs,TabsList,TabsTrigger,TabsContent } from "@/components/ui/tabs";
+import { Card,CardContent,CardHeader,CardTitle } from "@/components/ui/card";
+import { Table,TableBody,TableHead,TableHeader,TableRow } from "@/components/ui/table";
 
 const Flights = [
   {
@@ -75,6 +77,36 @@ const index = () => {
                     <TabsTrigger value="hotels">Hotels</TabsTrigger>
                     <TabsTrigger value="users">Users</TabsTrigger>
                 </TabsList>
+                <TabsContent value="flights">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Manage flights</CardTitle>
+                            <CardTitle>Add, edit or remove flights from the system</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div>
+                            <h3>
+                              Flight List
+                            </h3>
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Flight Name</TableHead>
+                                  <TableHead>From</TableHead>
+                                  <TableHead>To</TableHead>
+                                  <TableHead>Action</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {Flights.map(flights:any)=>(
+                                  
+                                )}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
             </Tabs>
         </div>
     )
