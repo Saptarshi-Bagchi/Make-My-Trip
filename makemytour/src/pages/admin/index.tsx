@@ -1,7 +1,10 @@
-import React, { useState } from "react";
-import { Tabs,TabsList,TabsTrigger,TabsContent } from "@/components/ui/tabs";
-import { Card,CardContent,CardHeader,CardTitle } from "@/components/ui/card";
-import { Table,TableBody,TableHead,TableHeader,TableRow } from "@/components/ui/table";
+import React, { useState, useEffect } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 const Flights = [
   {
@@ -65,51 +68,107 @@ const Hotels = [
 
 
 const index = () => {
-    const [activeTab,setActiveTab]=useState("flights");
-    const [selectedFlight,setSelectedFlight]=useState(null);
-    const [seletedHotel,setSelectedHotel]=useState(null);
-    return(
-        <div>
-            <h1>Admin Dashboard</h1>
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList>
-                    <TabsTrigger value="flights">Flights</TabsTrigger>
-                    <TabsTrigger value="hotels">Hotels</TabsTrigger>
-                    <TabsTrigger value="users">Users</TabsTrigger>
-                </TabsList>
-                <TabsContent value="flights">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Manage flights</CardTitle>
-                            <CardTitle>Add, edit or remove flights from the system</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div>
-                            <h3>
-                              Flight List
-                            </h3>
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Flight Name</TableHead>
-                                  <TableHead>From</TableHead>
-                                  <TableHead>To</TableHead>
-                                  <TableHead>Action</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {Flights.map(flights:any)=>(
-                                  
-                                )}
-                              </TableBody>
-                            </Table>
-                          </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-            </Tabs>
-        </div>
-    )
+  const [activeTab, setActiveTab] = useState("flights");
+  const [selectedFlight, setSelectedFlight] = useState(null);
+  const [seletedHotel, setSelectedHotel] = useState(null);
+  return (
+    <div className="container mx-auto p-4 bg-white max-w-full">
+      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3 text-black">
+          <TabsTrigger value="flights">Flights</TabsTrigger>
+          <TabsTrigger value="hotels">Hotels</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
+        </TabsList>
+        <TabsContent value="flights">
+          <Card>
+            <CardHeader>
+              <CardTitle>Manage flights</CardTitle>
+              <CardTitle>Add, edit or remove flights from the system</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Flight List
+                  </h3>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Flight Name</TableHead>
+                        <TableHead>From</TableHead>
+                        <TableHead>To</TableHead>
+                        <TableHead>Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {Flights.map((flight: any) => (
+                        <TableRow key={flight._id}>
+                          <TableCell>{flight.flightName}</TableCell>
+                          <TableCell>{flight.from}</TableCell>
+                          <TableCell>{flight.to}</TableCell>
+                          <TableCell>
+                            <Button onClick={() => setSelectedFlight(flight)}>Edit</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div>
+
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
 }
 
-export default index
+export default index;
+
+function AddeditFlight({ flight }: any) {
+  const [formdata, setformdata] = useState({
+    flightName: "",
+    from: "",
+    to: "",
+    departureTime: "",
+    arrivalTime: "",
+    price: 0,
+    availableSeats: 0,
+  });
+  useEffect(() => {
+    if (flight) {
+      setformdata(flight)
+    } else {
+      setformdata({
+        flightName: "",
+        from: "",
+        to: "",
+        departureTime: "",
+        arrivalTime: "",
+        price: 0,
+        availableSeats: 0,
+      });
+    }
+  }, [flight]);
+  const handlechange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setformdata((prev) => ({ ...prev, [name]: value }));
+  };
+  const handlesubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(formdata);
+  }
+  return(
+    <form onSubmit={handlesubmit}>
+      <h3>{flight ? "Edit Flight" : "Add new Flight"}</h3>
+      <div>
+        <Label>Flight name</Label>
+        <Input id="firstName" value={formdata.flightName} onChange={handlechange} required/>
+      </div>
+    </form>
+  )
+}
