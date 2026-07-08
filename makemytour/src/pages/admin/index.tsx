@@ -115,9 +115,7 @@ const index = () => {
                     </TableBody>
                   </Table>
                 </div>
-                <div>
-
-                </div>
+                <AddeditFlight flight={selectedFlight}/>
               </div>
             </CardContent>
           </Card>
@@ -162,13 +160,86 @@ function AddeditFlight({ flight }: any) {
     e.preventDefault();
     console.log(formdata);
   }
-  return(
-    <form onSubmit={handlesubmit}>
-      <h3>{flight ? "Edit Flight" : "Add new Flight"}</h3>
+  return (
+    <form onSubmit={handlesubmit} className="space-y-4">
+      <h3 className="text-lg font-semibold mb-2">
+        {flight ? "Edit Flight" : "Add new Flight"}
+      </h3>
       <div>
-        <Label>Flight name</Label>
-        <Input id="firstName" value={formdata.flightName} onChange={handlechange} required/>
+        <Label htmlFor="flightName">Flight name</Label>
+        <Input
+          id="firstName"
+          name="firstName"
+          value={formdata.flightName}
+          onChange={handlechange}
+          required
+        />
       </div>
+      <div>
+        <Label htmlFor="from">From</Label>
+        <Input
+          id="from"
+          name="from"
+          value={formdata.from}
+          onChange={handlechange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="to">To</Label>
+        <Input
+          id="to"
+          name="to"
+          value={formdata.to}
+          onChange={handlechange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="departureTime">Departure Time</Label>
+        <Input
+          id="departureTime"
+          name="departureTime"
+          type="datetime-local"
+          value={formdata.departureTime}
+          onChange={handlechange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="arrivalTime">Arrival Time</Label>
+        <Input
+          id="arrivalTime"
+          name="arrivalTime"
+          type="datetime-local"
+          value={formdata.arrivalTime}
+          onChange={handlechange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="price">Price</Label>
+        <Input
+          id="price"
+          name="price"
+          type="number"
+          value={formdata.price}
+          onChange={handlechange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="availableSeats">Available Seats</Label>
+        <Input
+          id="availableSeats"
+          name="availableSeats"
+          type="number"
+          value={formdata.availableSeats}
+          onChange={handlechange}
+          required
+        />
+      </div>
+      <Button type="submit">{flight ? "Update Flight" : "Add Flight"}</Button>
     </form>
   )
 }
