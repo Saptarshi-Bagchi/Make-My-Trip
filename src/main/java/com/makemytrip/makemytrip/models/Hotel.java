@@ -28,11 +28,11 @@ public class Hotel {
         return amenities;
     }
 
-    public String gethotelName() {
+    public String getName() {
         return hotelName;
     }
 
-    public void sethotelName(String hotelName) {
+    public void setName(String hotelName) {
         this.hotelName = hotelName;
     }
 

@@ -1,4 +1,5 @@
 package com.makemytrip.makemytrip.repositories;
+
 import com.makemytrip.makemytrip.models.Users;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
