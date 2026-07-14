@@ -4,7 +4,6 @@ import Head from "next/head";
 import store, { setUser } from "@/store";
 import { Provider } from "react-redux";
 import Navbar from "@/components/Navbar";
-
 import { useEffect } from "react";
 import Footer from "@/components/Fotter";
 
