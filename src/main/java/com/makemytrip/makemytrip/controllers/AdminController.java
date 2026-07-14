@@ -31,16 +31,19 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/flight")
     public Flight addFlight(@RequestBody Flight flight) {
         return flightRepository.save(flight);
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/hotel")
     public Hotel addHotel(@RequestBody Hotel hotel) {
         return hotelRepository.save(hotel);
     }
 
+    @SuppressWarnings("null")
     @PutMapping("flight/{id}")
     public ResponseEntity<Flight> editflight(@PathVariable String id, @RequestBody Flight UpdatedFlight) {
         Optional<Flight> flightoptional = flightRepository.findById(id);
@@ -59,6 +62,7 @@ public class AdminController {
         return ResponseEntity.notFound().build();
     }
 
+    @SuppressWarnings("null")
     @PutMapping("hotel/{id}")
     public ResponseEntity<Hotel> editHotel(@PathVariable String id, @RequestBody Hotel updatedHotel) {
         Optional<Hotel> hotelOptional = hotelRepository.findById(id);
