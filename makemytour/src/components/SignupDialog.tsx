@@ -11,73 +11,6 @@ interface SignupDialogProps {
     trigger: React.ReactNode;
 }
 
-function extractErrorInfo(error: unknown): { status: number | null; text: string } {
-    if (typeof error === "string") return { status: null, text: error };
-
-    if (error && typeof error === "object") {
-        const anyErr = error as any;
-        const status: number | null =
-            anyErr.response?.status ?? anyErr.status ?? null;
-
-        const responseData = anyErr.response?.data;
-        let text = "";
-        if (responseData) {
-            if (typeof responseData === "string") text = responseData;
-            else if (responseData.message) text = responseData.message;
-            else if (responseData.error) text = responseData.error;
-        }
-        if (!text && typeof anyErr.message === "string") {
-            text = anyErr.message;
-        }
-        return { status, text };
-    }
-
-    return { status: null, text: "" };
-}
-
-function getLoginErrorMessage(error: unknown): string {
-    const { status, text } = extractErrorInfo(error);
-    const lower = text.toLowerCase();
-
-    const accountNotFound =
-        status === 404 ||
-        lower.includes("not found") ||
-        lower.includes("no account") ||
-        lower.includes("does not exist") ||
-        lower.includes("doesn't exist") ||
-        lower.includes("no user");
-
-    const wrongPassword =
-        status === 401 ||
-        lower.includes("password") ||
-        lower.includes("invalid credential") ||
-        lower.includes("incorrect");
-
-    if (accountNotFound) {
-        return "This email doesn't have an account. Please sign up first.";
-    }
-    if (wrongPassword) {
-        return "Wrong password. Please try again.";
-    }
-    return text || "Couldn't log you in. Please try again.";
-}
-
-function getSignupErrorMessage(error: unknown): string {
-    const { status, text } = extractErrorInfo(error);
-    const lower = text.toLowerCase();
-
-    const alreadyExists =
-        status === 409 ||
-        lower.includes("already exists") ||
-        lower.includes("already registered") ||
-        lower.includes("already in use");
-
-    if (alreadyExists) {
-        return "An account with this email already exists. Please login instead.";
-    }
-    return text || "Couldn't create your account. Please check your details and try again.";
-}
-
 const SignupDialog = ({ trigger }: SignupDialogProps) => {
     const [isSignup, setIsSignup] = useState(true);
     const [firstName, setFirstName] = useState("");
@@ -104,10 +37,6 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
             setopen(false);
             clearform();
         } catch (error) {
-            const message = isSignup
-                ? getSignupErrorMessage(error)
-                : getLoginErrorMessage(error);
-            window.alert(message);
         } finally {
             setIsSubmitting(false);
         }
