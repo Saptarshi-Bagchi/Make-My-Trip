@@ -11,25 +11,71 @@ interface SignupDialogProps {
     trigger: React.ReactNode;
 }
 
-function getErrorMessage(error: unknown, fallback: string): string {
-    if (typeof error === "string") return error;
+function extractErrorInfo(error: unknown): { status: number | null; text: string } {
+    if (typeof error === "string") return { status: null, text: error };
 
     if (error && typeof error === "object") {
         const anyErr = error as any;
+        const status: number | null =
+            anyErr.response?.status ?? anyErr.status ?? null;
 
         const responseData = anyErr.response?.data;
+        let text = "";
         if (responseData) {
-            if (typeof responseData === "string") return responseData;
-            if (responseData.message) return responseData.message;
-            if (responseData.error) return responseData.error;
+            if (typeof responseData === "string") text = responseData;
+            else if (responseData.message) text = responseData.message;
+            else if (responseData.error) text = responseData.error;
         }
-
-        if (typeof anyErr.message === "string" && anyErr.message.length > 0) {
-            return anyErr.message;
+        if (!text && typeof anyErr.message === "string") {
+            text = anyErr.message;
         }
+        return { status, text };
     }
 
-    return fallback;
+    return { status: null, text: "" };
+}
+
+function getLoginErrorMessage(error: unknown): string {
+    const { status, text } = extractErrorInfo(error);
+    const lower = text.toLowerCase();
+
+    const accountNotFound =
+        status === 404 ||
+        lower.includes("not found") ||
+        lower.includes("no account") ||
+        lower.includes("does not exist") ||
+        lower.includes("doesn't exist") ||
+        lower.includes("no user");
+
+    const wrongPassword =
+        status === 401 ||
+        lower.includes("password") ||
+        lower.includes("invalid credential") ||
+        lower.includes("incorrect");
+
+    if (accountNotFound) {
+        return "This email doesn't have an account. Please sign up first.";
+    }
+    if (wrongPassword) {
+        return "Wrong password. Please try again.";
+    }
+    return text || "Couldn't log you in. Please try again.";
+}
+
+function getSignupErrorMessage(error: unknown): string {
+    const { status, text } = extractErrorInfo(error);
+    const lower = text.toLowerCase();
+
+    const alreadyExists =
+        status === 409 ||
+        lower.includes("already exists") ||
+        lower.includes("already registered") ||
+        lower.includes("already in use");
+
+    if (alreadyExists) {
+        return "An account with this email already exists. Please login instead.";
+    }
+    return text || "Couldn't create your account. Please check your details and try again.";
 }
 
 const SignupDialog = ({ trigger }: SignupDialogProps) => {
@@ -40,13 +86,11 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
     const [password, setPassword] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [open, setopen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const dispatch = useDispatch();
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
-        setErrorMessage("");
         setIsSubmitting(true);
 
         try {
@@ -60,13 +104,10 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
             setopen(false);
             clearform();
         } catch (error) {
-            const message = getErrorMessage(
-                error,
-                isSignup
-                    ? "Couldn't create your account. Please check your details and try again."
-                    : "Incorrect email or password. Please try again."
-            );
-            setErrorMessage(message);
+            const message = isSignup
+                ? getSignupErrorMessage(error)
+                : getLoginErrorMessage(error);
+            window.alert(message);
         } finally {
             setIsSubmitting(false);
         }
@@ -78,19 +119,14 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
         setEmail("");
         setPassword("");
         setPhoneNumber("");
-        setErrorMessage("");
     };
 
     const switchMode = (toSignup: boolean) => {
         setIsSignup(toSignup);
-        setErrorMessage("");
     };
 
     return (
-        <Dialog open={open} onOpenChange={(nextOpen) => {
-            setopen(nextOpen);
-            if (!nextOpen) setErrorMessage("");
-        }}>
+        <Dialog open={open} onOpenChange={setopen}>
             <DialogTrigger asChild>
                 {trigger}
             </DialogTrigger>
@@ -158,15 +194,6 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                                 required
                             />
-                        </div>
-                    )}
-
-                    {errorMessage && (
-                        <div
-                            role="alert"
-                            className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2"
-                        >
-                            {errorMessage}
                         </div>
                     )}
 
