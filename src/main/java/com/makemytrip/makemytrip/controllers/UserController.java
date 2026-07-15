@@ -1,6 +1,5 @@
 package com.makemytrip.makemytrip.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.makemytrip.makemytrip.models.Users;
@@ -15,10 +14,12 @@ public class UserController {
 
     @PostMapping("/login")
     public Users login(@RequestParam String email,@RequestParam String password){
+        System.out.println("Login request for: " + email);
         return userServices.login(email,password);
     }
     @PostMapping("/signup")
     public ResponseEntity<Users> signup(@RequestBody Users user){
+        System.out.println("Signup request: " + user.getEmail());
         return ResponseEntity.ok(userServices.signup(user));
     }
     @GetMapping("/email")

@@ -24,7 +24,12 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
         e.preventDefault()
         if (isSignup) {
             try {
-                const signin = await signup(firstName, lastName, phoneNumber, email, password);
+                const signin = await signup(firstName,
+                    lastName,
+                    email,
+                    phoneNumber,
+                    password
+                );
                 dispatch(setUser(signin));
                 setopen(false);
                 clearform();
@@ -124,7 +129,7 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                     <Button
                         type="submit"
                         className="w-full bg-blue-600 text-white"
-                        variant="outline"
+                        variant="default"
                     >
                         {isSignup ? "Sign Up" : "Login"}
                     </Button>

@@ -71,7 +71,7 @@ export const getflight = async () => {
     const data = res.data;
     return data;
   } catch (error) {
-    console.log(data);
+    console.log(error);
   }
 };
 
@@ -134,7 +134,7 @@ export const gethotel = async () => {
     const data = res.data;
     return data;
   } catch (error) {
-    console.log(data);
+    console.log(error);
   }
 };
 
