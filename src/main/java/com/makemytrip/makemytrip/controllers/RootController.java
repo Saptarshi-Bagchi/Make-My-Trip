@@ -20,7 +20,7 @@ public class RootController {
 
     @GetMapping("/")
     public String home() {
-        return "✅ Its running on port 8080";
+        return "✅ Backend is Up and Running!";
     }
 
     @GetMapping("/flight")
