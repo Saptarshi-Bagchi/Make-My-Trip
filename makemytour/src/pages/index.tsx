@@ -339,7 +339,6 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4">
-          {/* Offers Section */}
           <section className="my-16">
             <h2 className="text-2xl font-bold mb-8 text-white">Best Offers</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -349,7 +348,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Collections Section */}
           <section className="my-16">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold text-white">
@@ -363,7 +361,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Wonders Section */}
           <section className="my-16">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold text-white">
@@ -377,7 +374,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Download App Section */}
           <DownloadApp />
         </div>
       </main>
@@ -429,16 +425,16 @@ const DownloadApp = () => {
           <p className="text-gray-600 mb-4">
             Get India's #1 travel super app with best deals on flights
           </p>
-          <div className="flex space-x-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
               alt="App Store"
-              className="h-10"
+              className="h-10 max-w-full"
             />
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
               alt="Play Store"
-              className="h-10"
+              className="h-10 max-w-full"
             />
           </div>
         </div>
