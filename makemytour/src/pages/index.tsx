@@ -141,7 +141,7 @@ export default function Home() {
       cities.add(flight.from);
       cities.add(flight.to);
     });
-    hotel.forEach((hotel) => {
+    (hotel ?? []).forEach((hotel) => {
       cities.add(hotel.location);
     });
     return Array.from(cities).map((city) => ({ value: city, label: city }));
@@ -472,9 +472,8 @@ const WonderCard = ({ title, imageUrl }: any) => {
 function NavItem({ icon, text, active = false, onClick }: any) {
   return (
     <button
-      className={`flex flex-col items-center p-2 rounded-lg transition-colors ${
-        active ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
-      }`}
+      className={`flex flex-col items-center p-2 rounded-lg transition-colors ${active ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+        }`}
       onClick={onClick}
     >
       {icon}
