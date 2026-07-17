@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import Navbar from "@/components/Navbar";
 import { useEffect } from "react";
 import Footer from "@/components/Fotter";
+import { FlightTrackingProvider } from "@/lib/flightTrackingContext";
 
 const Myapp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
@@ -15,11 +16,13 @@ const Myapp = ({ Component, pageProps }: AppProps) => {
     }
   }, []);
   return (
-    <div className="min-h-screen ">
-      <Navbar />
-      <Component {...pageProps} />
-      <Footer/>
-    </div>
+    <FlightTrackingProvider>
+      <div className="min-h-screen ">
+        <Navbar />
+        <Component {...pageProps} />
+        <Footer/>
+      </div>
+    </FlightTrackingProvider>
   );
 };
 export default function App(props: AppProps) {

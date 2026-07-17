@@ -137,14 +137,20 @@ export default function Home() {
 
   const cityOptions = useMemo(() => {
     const cities = new Set<string>();
-    flight.forEach((flight) => {
-      cities.add(flight.from);
-      cities.add(flight.to);
+
+    (flight ?? []).forEach((f) => {
+      cities.add(f.from);
+      cities.add(f.to);
     });
-    (hotel ?? []).forEach((hotel) => {
-      cities.add(hotel.location);
+
+    (hotel ?? []).forEach((h) => {
+      cities.add(h.location);
     });
-    return Array.from(cities).map((city) => ({ value: city, label: city }));
+
+    return Array.from(cities).map((city) => ({
+      value: city,
+      label: city,
+    }));
   }, [flight, hotel]);
 
   if (loading) {
