@@ -38,6 +38,8 @@ import { useDispatch, useSelector } from "react-redux";
 import SignupDialog from "@/components/SignupDialog";
 import Loader from "@/components/Loader";
 import { setUser } from "@/store";
+import { useDynamicPrice } from "@/lib/useDynamicPrice";
+import DynamicPricingCard from "@/components/DynamicPricingCard";
 const BookHotelPage = () => {
   const [quantity, setQuantity] = useState(1);
   const router = useRouter();
@@ -62,10 +64,29 @@ const BookHotelPage = () => {
     fetchhotels();
   }, []);
 
+  const hotel = hotels[0];
+
+  const FULL_CAPACITY_HOTEL = 50; // assumed total rooms for demand calc
+  const {
+    breakdown: priceBreakdown,
+    displayPrice: liveHotelPrice,
+    isFrozen,
+    freeze,
+    history: priceHistory,
+    freezeCurrentPrice,
+    unfreeze,
+  } = useDynamicPrice({
+    type: "hotel",
+    id: hotel?.id,
+    basePrice: hotel?.pricePerNight ?? 0,
+    availableUnits: hotel?.availableRooms ?? 0,
+    fullCapacity: FULL_CAPACITY_HOTEL,
+  });
+
   if (loading) {
     return <Loader />;
   }
-  const hotel = hotels[0];
+
   const hotelData = {
     name: "Magnum Resorts- Near Candolim Beach",
     rating: 3,
@@ -111,7 +132,7 @@ const BookHotelPage = () => {
     );
   };
 
-  const totalPrice = hotel?.pricePerNight * quantity;
+  const totalPrice = liveHotelPrice * quantity;
   const totalTaxes = hotelData?.room.taxes * quantity;
   const totalDiscounts = hotelData?.room.discountedPrice * quantity;
   const grandTotal = totalPrice + totalTaxes - totalDiscounts;
@@ -171,7 +192,7 @@ const BookHotelPage = () => {
             </Label>
             <Input
               id="pricePerNight"
-              value={`₹ ${hotel.pricePerNight}`}
+              value={`₹ ${liveHotelPrice}`}
               readOnly
             />
           </div>
@@ -402,6 +423,20 @@ const BookHotelPage = () => {
                   </span>
                 </div>
               </div>
+
+              <div className="mb-4">
+                <DynamicPricingCard
+                  type="hotel"
+                  breakdown={priceBreakdown}
+                  displayPrice={liveHotelPrice}
+                  isFrozen={isFrozen}
+                  freeze={freeze}
+                  history={priceHistory}
+                  onFreeze={() => freezeCurrentPrice(24)}
+                  onUnfreeze={unfreeze}
+                />
+              </div>
+
               <Dialog open={open} onOpenChange={setopem}>
                 <DialogTrigger asChild>
                   <button className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors mb-3">
