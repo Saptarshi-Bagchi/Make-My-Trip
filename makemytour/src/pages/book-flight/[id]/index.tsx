@@ -41,6 +41,8 @@ import { Users, Ticket } from "lucide-react";
 import SignupDialog from "@/components/SignupDialog";
 import Loader from "@/components/Loader";
 import { setUser } from "@/store";
+import { useDynamicPrice } from "@/lib/useDynamicPrice";
+import DynamicPricingCard from "@/components/DynamicPricingCard";
 const BookFlightPage = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -66,13 +68,32 @@ const BookFlightPage = () => {
     fetchFlights();
   }, [id, user]);
 
+  const flight = flights[0];
+
+  const FULL_CAPACITY_FLIGHT = 180; // assumed aircraft capacity for demand calc
+  const {
+    breakdown: priceBreakdown,
+    displayPrice: liveFlightPrice,
+    isFrozen,
+    freeze,
+    history: priceHistory,
+    freezeCurrentPrice,
+    unfreeze,
+  } = useDynamicPrice({
+    type: "flight",
+    id: flight?.id,
+    basePrice: flight?.price ?? 0,
+    availableUnits: flight?.availableSeats ?? 0,
+    fullCapacity: FULL_CAPACITY_FLIGHT,
+  });
+
   if (loading) {
     return <Loader />;
   }
   if (flights.length === 0) {
     return <div>No flight data available for this ID.</div>;
   }
-  const flight = flights[0];
+
   const flightDetails = {
     from: "Bengaluru",
     to: "New Delhi",
@@ -158,7 +179,7 @@ const BookFlightPage = () => {
     );
   };
 
-  const totalPrice = flight?.price * quantity;
+  const totalPrice = liveFlightPrice * quantity;
   const totalTaxes = fareSummary?.taxes * quantity;
   const totalOtherServices = fareSummary?.otherServices * quantity;
   const totalDiscounts = fareSummary?.discounts * quantity;
@@ -524,6 +545,20 @@ const BookFlightPage = () => {
                   </div>
                 </div>
               </div>
+
+              <div className="mt-4 mb-4">
+                <DynamicPricingCard
+                  type="flight"
+                  breakdown={priceBreakdown}
+                  displayPrice={liveFlightPrice}
+                  isFrozen={isFrozen}
+                  freeze={freeze}
+                  history={priceHistory}
+                  onFreeze={() => freezeCurrentPrice(24)}
+                  onUnfreeze={unfreeze}
+                />
+              </div>
+
               <Dialog open={open} onOpenChange={setopem}>
                 <DialogTrigger asChild>
                   <Button className="w-full bg-red-600 text-white">
