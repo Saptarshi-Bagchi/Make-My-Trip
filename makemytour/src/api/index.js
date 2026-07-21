@@ -7,7 +7,6 @@ export const login = async (email, password) => {
     const url = `${BACKEND_URL}/user/login?email=${email}&password=${password}`;
     const res = await axios.post(url);
     const data = res.data;
-    // console.log(data);
     return data;
   } catch (error) {
     throw error;
@@ -30,7 +29,6 @@ export const signup = async (
       password,
     });
     const data = res.data;
-    // console.log(data);
     return data;
   } catch (error) {
     throw error;
@@ -202,5 +200,16 @@ export const handlehotelbooking = async (userId, hotelId, rooms, price) => {
     return data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const cancelBooking = async (userId, index) => {
+  try {
+    const url = `${BACKEND_URL}/booking/cancel?userId=${userId}&index=${index}`;
+    const res = await axios.post(url);
+    const data = res.data;
+    return data;
+  } catch (error) {
+    throw error;
   }
 };

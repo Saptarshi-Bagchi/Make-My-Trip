@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -76,4 +77,42 @@ public class BookingService {
         throw new RuntimeException("User or flight not found");
     }
 
-}   
+    @SuppressWarnings("null")
+    public Booking cancelBooking(String userId, int index) {
+        Optional<Users> usersOptional = userRepository.findById(userId);
+        if (!usersOptional.isPresent()) {
+            throw new RuntimeException("User not found");
+        }
+
+        Users user = usersOptional.get();
+        List<Booking> bookings = user.getBookings();
+
+        if (index < 0 || index >= bookings.size()) {
+            throw new RuntimeException("Invalid booking index");
+        }
+
+        Booking booking = bookings.get(index);
+
+        if ("Flight".equals(booking.getType())) {
+            Optional<Flight> flightOptional = flightRepository.findById(booking.getBookingId());
+            if (flightOptional.isPresent()) {
+                Flight flight = flightOptional.get();
+                flight.setAvailableSeats(flight.getAvailableSeats() + booking.getQuantity());
+                flightRepository.save(flight);
+            }
+        } else if ("Hotel".equals(booking.getType())) {
+            Optional<Hotel> hotelOptional = hotelRepository.findById(booking.getBookingId());
+            if (hotelOptional.isPresent()) {
+                Hotel hotel = hotelOptional.get();
+                hotel.setAvailableRooms(hotel.getAvailableRooms() + booking.getQuantity());
+                hotelRepository.save(hotel);
+            }
+        }
+
+        bookings.remove(index);
+        user.setBookings(bookings);
+        userRepository.save(user);
+        return booking;
+    }
+
+}
