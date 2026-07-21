@@ -19,4 +19,8 @@ public class BookingController {
     public Users.Booking bookhotel (@RequestParam String userId,@RequestParam String hotelId,@RequestParam int rooms,@RequestParam double price){
         return bookingService.bookhotel(userId,hotelId,rooms,price);
     }
+    @PostMapping("/cancel")
+    public Users.Booking cancelBooking(@RequestParam String userId, @RequestParam int index){
+        return bookingService.cancelBooking(userId, index);
+    }
 }
