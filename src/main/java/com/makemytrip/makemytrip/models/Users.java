@@ -47,6 +47,8 @@ public class Users {
         private String date;
         private int quantity;
         private double totalPrice;
+        private String seatNumbers;
+        private String roomType;
 
         public String getType() {return type;}
         public void setType(String type) {this.type = type;}
@@ -62,5 +64,11 @@ public class Users {
 
         public double getTotalPrice() {return totalPrice;}
         public void setTotalPrice(double totalPrice) {this.totalPrice = totalPrice;}
+
+        public String getSeatNumbers() {return seatNumbers;}
+        public void setSeatNumbers(String seatNumbers) {this.seatNumbers = seatNumbers;}
+
+        public String getRoomType() {return roomType;}
+        public void setRoomType(String roomType) {this.roomType = roomType;}
     }
 }

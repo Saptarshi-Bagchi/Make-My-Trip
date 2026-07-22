@@ -25,7 +25,7 @@ public class BookingService {
     private HotelRepository hotelRepository;
 
     @SuppressWarnings("null")
-    public Booking bookFlight(String userId,String flightId,int seats,double price){
+    public Booking bookFlight(String userId,String flightId,int seats,double price,String seatNumbers){
         Optional<Users> usersOptional =userRepository.findById(userId);
         Optional<Flight> flightOptional =flightRepository.findById(flightId);
         if(usersOptional.isPresent() && flightOptional.isPresent()){
@@ -41,6 +41,7 @@ public class BookingService {
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(seats);
                 booking.setTotalPrice(price);
+                booking.setSeatNumbers(seatNumbers);
                 user.getBookings().add(booking);
                 userRepository.save(user);
                 return booking;
@@ -51,7 +52,7 @@ public class BookingService {
         throw new RuntimeException("User or flight not found");
     }
     @SuppressWarnings("null")
-    public Booking bookhotel(String userId,String hotelId,int rooms,double price){
+    public Booking bookhotel(String userId,String hotelId,int rooms,double price,String roomType){
         Optional<Users> usersOptional =userRepository.findById(userId);
         Optional<Hotel> hotelOptional = hotelRepository.findById(hotelId);
         if(usersOptional.isPresent() && hotelOptional.isPresent()){
@@ -67,6 +68,7 @@ public class BookingService {
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(rooms);
                 booking.setTotalPrice(price);
+                booking.setRoomType(roomType);
                 user.getBookings().add(booking);
                 userRepository.save(user);
                 return booking;

@@ -14,8 +14,12 @@ import {
   Info,
   ArrowRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getflight, handleflightbooking } from "@/api";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { generateSeatMap, calculateSeatSurcharge, Seat } from "@/lib/seatMap";
+import FlightSeatMap from "@/components/FlightSeatMap";
+import { getPreferences, savePreferences } from "@/lib/bookingPreferences";
 import { useDispatch, useSelector } from "react-redux";
 interface Flight {
   id: string; // Unique identifier for the flight
@@ -86,6 +90,21 @@ const BookFlightPage = () => {
     availableUnits: flight?.availableSeats ?? 0,
     fullCapacity: FULL_CAPACITY_FLIGHT,
   });
+
+  const seatMap = useMemo(() => (flight?.id ? generateSeatMap(flight.id) : []), [flight?.id]);
+  const [selectedSeatIds, setSelectedSeatIds] = useState<string[]>([]);
+  const selectedSeats = seatMap.filter((s: Seat) => selectedSeatIds.includes(s.id));
+  const seatSurcharge = calculateSeatSurcharge(selectedSeats);
+
+  const toggleSeat = (seatId: string) => {
+    setSelectedSeatIds((prev) =>
+      prev.includes(seatId) ? prev.filter((id) => id !== seatId) : [...prev, seatId]
+    );
+  };
+
+  useEffect(() => {
+    setSelectedSeatIds((prev) => prev.slice(0, quantity));
+  }, [quantity]);
 
   if (loading) {
     return <Loader />;
@@ -179,7 +198,7 @@ const BookFlightPage = () => {
     );
   };
 
-  const totalPrice = liveFlightPrice * quantity;
+  const totalPrice = liveFlightPrice * quantity + seatSurcharge;
   const totalTaxes = fareSummary?.taxes * quantity;
   const totalOtherServices = fareSummary?.otherServices * quantity;
   const totalDiscounts = fareSummary?.discounts * quantity;
@@ -188,20 +207,29 @@ const BookFlightPage = () => {
 
   const handlebooking = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (selectedSeatIds.length !== quantity) return;
     try {
+      const seatNumbersStr = selectedSeatIds.join(", ");
       const data = await handleflightbooking(
         user?.id,
         flight?.id,
         quantity,
-        grandTotal
+        grandTotal,
+        seatNumbersStr
       );
       const updateuser = {
         ...user,
         bookings: [...user.bookings, data],
       };
       dispatch(setUser(updateuser));
+      if (user?.id) {
+        savePreferences(user.id, {
+          preferredSeatColumn: selectedSeats[0]?.col,
+        });
+      }
       setopem(false);
       setQuantity(1);
+      setSelectedSeatIds([]);
       router.push("/profile");
     } catch (error) {
       console.log(error);
@@ -215,109 +243,143 @@ const BookFlightPage = () => {
           Flight Booking Details
         </DialogTitle>
       </DialogHeader>
-      <div className="grid gap-6 mt-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="flightName" className="flex items-center">
-              <Plane className="w-4 h-4 mr-2" />
-              Flight Name
-            </Label>
-            <Input id="flightName" value={flight?.flightName} readOnly />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="from" className="flex items-center">
-              <MapPin className="w-4 h-4 mr-2" />
-              From
-            </Label>
-            <Input id="from" value={flight?.from} readOnly />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="to" className="flex items-center">
-              <MapPin className="w-4 h-4 mr-2" />
-              To
-            </Label>
-            <Input id="to" value={flight?.to} readOnly />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="departureTime" className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
-              Departure Time
-            </Label>
-            <Input
-              id="departureTime"
-              value={new Date(flight.departureTime).toLocaleString()}
-              readOnly
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="arrivalTime" className="flex items-center">
-              <Clock className="w-4 h-4 mr-2" />
-              Arrival Time
-            </Label>
-            <Input
-              id="arrivalTime"
-              value={new Date(flight.arrivalTime).toLocaleString()}
-              readOnly
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="quantity" className="flex items-center">
-              <Ticket className="w-4 h-4 mr-2" />
-              Number of Tickets
-            </Label>
-            <Input
-              id="quantity"
-              type="number"
-              min="1"
-              max={flight.availableSeats}
-              value={quantity}
-              onChange={handleQuantityChange}
-            />
-          </div>
-        </div>
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h3 className="text-lg font-bold mb-4 flex items-center">
-            <CreditCard className="w-5 h-5 mr-2" />
-            Fare Summary
-          </h3>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Base Fare</span>
-              <span className="font-medium">
-                ₹ {totalPrice.toLocaleString()}
-              </span>
+      <Tabs defaultValue="details" className="mt-4">
+        <TabsList>
+          <TabsTrigger value="details">Details & Fare</TabsTrigger>
+          <TabsTrigger value="seats">
+            Select Seats {selectedSeatIds.length > 0 && `(${selectedSeatIds.length}/${quantity})`}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="details">
+          <div className="grid gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="flightName" className="flex items-center">
+                  <Plane className="w-4 h-4 mr-2" />
+                  Flight Name
+                </Label>
+                <Input id="flightName" value={flight?.flightName} readOnly />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="from" className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  From
+                </Label>
+                <Input id="from" value={flight?.from} readOnly />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="to" className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  To
+                </Label>
+                <Input id="to" value={flight?.to} readOnly />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="departureTime" className="flex items-center">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Departure Time
+                </Label>
+                <Input
+                  id="departureTime"
+                  value={new Date(flight.departureTime).toLocaleString()}
+                  readOnly
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="arrivalTime" className="flex items-center">
+                  <Clock className="w-4 h-4 mr-2" />
+                  Arrival Time
+                </Label>
+                <Input
+                  id="arrivalTime"
+                  value={new Date(flight.arrivalTime).toLocaleString()}
+                  readOnly
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="quantity" className="flex items-center">
+                  <Ticket className="w-4 h-4 mr-2" />
+                  Number of Tickets
+                </Label>
+                <Input
+                  id="quantity"
+                  type="number"
+                  min="1"
+                  max={flight.availableSeats}
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                />
+              </div>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Taxes and Surcharges</span>
-              <span className="font-medium">
-                ₹ {totalTaxes.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Other Services</span>
-              <span className="font-medium">
-                ₹ {totalOtherServices.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center text-green-600">
-              <span className="font-medium">Discounts</span>
-              <span className="font-medium">
-                - ₹ {Math.abs(totalDiscounts).toLocaleString()}
-              </span>
-            </div>
-            <div className="border-t pt-2 mt-2">
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-lg">Total Amount</span>
-                <span className="font-bold text-lg">
-                  ₹ {grandTotal.toLocaleString()}
-                </span>
+
+            <div className="bg-gray-100 rounded-lg p-4">
+              <h3 className="text-lg font-bold mb-4 flex items-center">
+                <CreditCard className="w-5 h-5 mr-2" />
+                Fare Summary
+              </h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Base Fare</span>
+                  <span className="font-medium">
+                    ₹ {totalPrice.toLocaleString()}
+                  </span>
+                </div>
+                {seatSurcharge > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Premium Seat Surcharge</span>
+                    <span className="font-medium">₹ {seatSurcharge.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Taxes and Surcharges</span>
+                  <span className="font-medium">
+                    ₹ {totalTaxes.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Other Services</span>
+                  <span className="font-medium">
+                    ₹ {totalOtherServices.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-green-600">
+                  <span className="font-medium">Discounts</span>
+                  <span className="font-medium">
+                    - ₹ {Math.abs(totalDiscounts).toLocaleString()}
+                  </span>
+                </div>
+                <div className="border-t pt-2 mt-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-lg">Total Amount</span>
+                    <span className="font-bold text-lg">
+                      ₹ {grandTotal.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <Button className="w-full mt-4" onClick={handlebooking}>
-        Proceed to Payment
+        </TabsContent>
+
+        <TabsContent value="seats">
+          <FlightSeatMap
+            seats={seatMap}
+            selectedSeatIds={selectedSeatIds}
+            onToggle={toggleSeat}
+            maxSelectable={quantity}
+          />
+        </TabsContent>
+      </Tabs>
+
+      <Button
+        className="w-full mt-4"
+        onClick={handlebooking}
+        disabled={selectedSeatIds.length !== quantity}
+      >
+        {selectedSeatIds.length !== quantity
+          ? `Select ${quantity} seat${quantity > 1 ? "s" : ""} to continue`
+          : "Proceed to Payment"}
       </Button>
     </DialogContent>
   );
