@@ -16,6 +16,10 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { gethotel, handlehotelbooking } from "@/api";
+import { ROOM_TYPES } from "@/lib/roomTypes";
+import RoomTypeGrid from "@/components/RoomTypeGrid";
+import Room3DPreview from "@/components/Room3DPreview";
+import { getPreferences, savePreferences } from "@/lib/bookingPreferences";
 interface Hotel {
   id: string; // Unique identifier for the hotel
   hotelName: string; // Name of the hotel
@@ -83,6 +87,15 @@ const BookHotelPage = () => {
     fullCapacity: FULL_CAPACITY_HOTEL,
   });
 
+  const [selectedRoomTypeId, setSelectedRoomTypeId] = useState(ROOM_TYPES[0].id);
+  useEffect(() => {
+    if (user?.id) {
+      const prefs = getPreferences(user.id);
+      if (prefs.preferredRoomTypeId) setSelectedRoomTypeId(prefs.preferredRoomTypeId);
+    }
+  }, [user?.id]);
+  const selectedRoomType = ROOM_TYPES.find((r) => r.id === selectedRoomTypeId) ?? ROOM_TYPES[0];
+
   if (loading) {
     return <Loader />;
   }
@@ -132,7 +145,8 @@ const BookHotelPage = () => {
     );
   };
 
-  const totalPrice = liveHotelPrice * quantity;
+  const roomAdjustedPrice = Math.round(liveHotelPrice * selectedRoomType.multiplier);
+  const totalPrice = roomAdjustedPrice * quantity;
   const totalTaxes = hotelData?.room.taxes * quantity;
   const totalDiscounts = hotelData?.room.discountedPrice * quantity;
   const grandTotal = totalPrice + totalTaxes - totalDiscounts;
@@ -143,13 +157,17 @@ const BookHotelPage = () => {
         user?.id,
         hotel?.id,
         quantity,
-        grandTotal
+        grandTotal,
+        selectedRoomType.name
       );
       const updateuser = {
         ...user,
         bookings: [...user.bookings, data],
       };
       dispatch(setUser(updateuser));
+      if (user?.id) {
+        savePreferences(user.id, { preferredRoomTypeId: selectedRoomType.id });
+      }
       setopem(false);
       setQuantity(1);
       router.push("/profile");
@@ -367,14 +385,20 @@ const BookHotelPage = () => {
           {/* Booking Card */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">
-                {hotelData.room.type}
-              </h3>
-              <p className="text-gray-600 mb-4">{hotelData.room.capacity}</p>
+              <h3 className="text-xl font-semibold mb-4">Choose Your Room</h3>
 
-              <ul className="space-y-3 mb-6">
-                {hotelData.room.features.map((feature, index) => (
-                  <li key={index} className="flex items-start space-x-2">
+              <RoomTypeGrid
+                roomTypes={ROOM_TYPES}
+                basePrice={liveHotelPrice}
+                selectedId={selectedRoomTypeId}
+                onSelect={setSelectedRoomTypeId}
+              />
+
+              <Room3DPreview images={selectedRoomType.images} name={selectedRoomType.name} />
+
+              <ul className="space-y-2 mb-4">
+                {selectedRoomType.amenities.map((feature, index) => (
+                  <li key={index} className="flex items-start space-x-2 text-sm">
                     <span className="text-gray-400">•</span>
                     <span className="text-gray-600">{feature}</span>
                   </li>

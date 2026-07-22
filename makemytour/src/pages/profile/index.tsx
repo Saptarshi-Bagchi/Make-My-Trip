@@ -196,6 +196,16 @@ const index = () => {
               <p className="text-sm text-gray-500">
                 Booking ID: {booking?.bookingId}
               </p>
+              {booking?.type === "Flight" && booking?.seatNumbers && (
+                <p className="text-xs text-blue-600 font-medium mt-0.5">
+                  Seats: {booking.seatNumbers}
+                </p>
+              )}
+              {booking?.type === "Hotel" && booking?.roomType && (
+                <p className="text-xs text-blue-600 font-medium mt-0.5">
+                  {booking.roomType}
+                </p>
+              )}
             </div>
           </div>
           <div className="text-right">
@@ -342,7 +352,6 @@ const index = () => {
                       <p className="font-medium">
                         {user?.firstName} {user?.lastName}
                       </p>
-                      {/* <p className="text-sm text-gray-500">{userData.role}</p> */}
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
