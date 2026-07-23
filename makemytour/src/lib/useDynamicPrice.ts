@@ -59,8 +59,7 @@ export function useDynamicPrice({
     const history = useMemo(() => {
         if (!id) return [];
         return generatePriceHistory(id, basePrice, fullCapacity, availableUnits);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, basePrice, fullCapacity]);
+    }, [id, basePrice, fullCapacity, availableUnits]);
 
     const isFrozen = Boolean(freeze);
     const displayPrice = freeze ? freeze.price : breakdown.price;

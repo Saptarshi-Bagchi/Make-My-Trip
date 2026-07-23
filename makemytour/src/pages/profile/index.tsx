@@ -68,11 +68,11 @@ const index = () => {
       year: "numeric",
     });
   };
-  const handleEditFormChange = (field:any, value:any) => {
+  const handleEditFormChange = (field: any, value: any) => {
     setUserData((prevState) => ({
-        ...prevState,
-        [field]: value, // Update the specific field dynamically
-      }));
+      ...prevState,
+      [field]: value,
+    }));
   };
 
   const bookingsWithOriginalIndex = (user?.bookings ?? []).map((b: any, idx: number) => ({
@@ -259,162 +259,160 @@ const index = () => {
       />
       <div className="absolute inset-0 bg-white/70" />
       <div className="relative z-10">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Profile Section */}
-          <div className="md:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-bold">Profile</h2>
-                {!isEditing && (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="text-red-600 flex items-center space-x-1 hover:text-red-700"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    <span>Edit</span>
-                  </button>
-                )}
-              </div>
-
-              {isEditing ? (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      value={userData.firstName}
-                      onChange={(e) => handleEditFormChange("firstName", e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      value={userData.lastName}
-                      onChange={(e) => handleEditFormChange("lastName", e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={userData.email}
-                      onChange={(e) => handleEditFormChange("email", e.target.value)}
-                      
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      value={userData.phoneNumber}
-                      onChange={(e) => handleEditFormChange("phoneNumber", e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                  <div className="flex space-x-3">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-1">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <div className="flex justify-between items-start mb-4">
+                  <h2 className="text-xl font-bold">Profile</h2>
+                  {!isEditing && (
                     <button
-                      onClick={handleSave}
-                      className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+                      onClick={() => setIsEditing(true)}
+                      className="text-red-600 flex items-center space-x-1 hover:text-red-700"
                     >
-                      <Check className="w-4 h-4" />
-                      <span>Save</span>
+                      <Edit2 className="w-4 h-4" />
+                      <span>Edit</span>
                     </button>
-                    <button
-                      onClick={() => {
-                        setIsEditing(false);
-                        setEditForm({ ...user });
-                      }}
-                      className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
-                    >
-                      <X className="w-4 h-4" />
-                      <span>Cancel</span>
-                    </button>
-                  </div>
+                  )}
                 </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-3">
-                    <User className="w-5 h-5 text-gray-500" />
+
+                {isEditing ? (
+                  <div className="space-y-4">
                     <div>
-                      <p className="font-medium">
-                        {user?.firstName} {user?.lastName}
-                      </p>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        value={userData.firstName}
+                        onChange={(e) => handleEditFormChange("firstName", e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        value={userData.lastName}
+                        onChange={(e) => handleEditFormChange("lastName", e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        value={userData.email}
+                        onChange={(e) => handleEditFormChange("email", e.target.value)}
+
+                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        value={userData.phoneNumber}
+                        onChange={(e) => handleEditFormChange("phoneNumber", e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      />
+                    </div>
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={handleSave}
+                        className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+                      >
+                        <Check className="w-4 h-4" />
+                        <span>Save</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsEditing(false);
+                          setEditForm({ ...user });
+                        }}
+                        className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
+                      >
+                        <X className="w-4 h-4" />
+                        <span>Cancel</span>
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Mail className="w-5 h-5 text-gray-500" />
-                    <p>{user?.email}</p>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Phone className="w-5 h-5 text-gray-500" />
-                    <p>{user?.phoneNumber}</p>
-                  </div>
-                  <button
-                    className="w-full mt-4 flex items-center justify-center space-x-2 text-red-600 hover:text-red-700"
-                    onClick={logout}
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Bookings Section */}
-          <div className="md:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-              <h2 className="text-xl font-bold mb-4">My Bookings</h2>
-
-              <Tabs defaultValue="flights">
-                <TabsList>
-                  <TabsTrigger value="flights">Flights</TabsTrigger>
-                  <TabsTrigger value="hotels">Hotels</TabsTrigger>
-                  <TabsTrigger value="refunds">Refunds</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="flights">
-                  <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
-                    {flightBookings.map((booking: any, index: any) =>
-                      renderBookingCard(booking, index)
-                    )}
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="hotels">
+                ) : (
                   <div className="space-y-6">
-                    {hotelBookings.map((booking: any, index: any) =>
-                      renderBookingCard(booking, index)
-                    )}
+                    <div className="flex items-center space-x-3">
+                      <User className="w-5 h-5 text-gray-500" />
+                      <div>
+                        <p className="font-medium">
+                          {user?.firstName} {user?.lastName}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Mail className="w-5 h-5 text-gray-500" />
+                      <p>{user?.email}</p>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Phone className="w-5 h-5 text-gray-500" />
+                      <p>{user?.phoneNumber}</p>
+                    </div>
+                    <button
+                      className="w-full mt-4 flex items-center justify-center space-x-2 text-red-600 hover:text-red-700"
+                      onClick={logout}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Logout</span>
+                    </button>
                   </div>
-                </TabsContent>
+                )}
+              </div>
+            </div>
 
-                <TabsContent value="refunds">
-                  <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
-                    {refunds.length > 0 ? (
-                      refunds.map((refund) => <RefundStatusCard key={refund.id} refund={refund} />)
-                    ) : (
-                      <p className="text-gray-500 text-sm">No cancellations yet.</p>
-                    )}
-                  </div>
-                </TabsContent>
-              </Tabs>
+            <div className="md:col-span-2">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h2 className="text-xl font-bold mb-4">My Bookings</h2>
+
+                <Tabs defaultValue="flights">
+                  <TabsList>
+                    <TabsTrigger value="flights">Flights</TabsTrigger>
+                    <TabsTrigger value="hotels">Hotels</TabsTrigger>
+                    <TabsTrigger value="refunds">Refunds</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="flights">
+                    <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
+                      {flightBookings.map((booking: any, index: any) =>
+                        renderBookingCard(booking, index)
+                      )}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="hotels">
+                    <div className="space-y-6">
+                      {hotelBookings.map((booking: any, index: any) =>
+                        renderBookingCard(booking, index)
+                      )}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="refunds">
+                    <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
+                      {refunds.length > 0 ? (
+                        refunds.map((refund) => <RefundStatusCard key={refund.id} refund={refund} />)
+                      ) : (
+                        <p className="text-gray-500 text-sm">No cancellations yet.</p>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
 

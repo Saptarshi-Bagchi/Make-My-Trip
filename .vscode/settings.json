@@ -1,5 +1,5 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "interactive",
-    "chat.disableAIFeatures": true
+    "chat.disableAIFeatures": false
 }

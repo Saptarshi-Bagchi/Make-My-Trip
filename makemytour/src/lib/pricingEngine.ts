@@ -94,7 +94,6 @@ export function computeLivePrice(
     };
 }
 
-// Seeded pseudo-random so the same entity always shows the same history
 function hashString(str: string): number {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
