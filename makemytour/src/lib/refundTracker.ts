@@ -3,7 +3,7 @@ export type RefundStatus = "Pending" | "Processing" | "Completed";
 export interface RefundRecord {
     id: string;
     entityType: "flight" | "hotel";
-    label: string; // e.g. "Delhi → Mumbai" or hotel name
+    label: string;
     reason: string;
     originalAmount: number;
     refundAmount: number;
