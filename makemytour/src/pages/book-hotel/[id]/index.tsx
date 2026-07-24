@@ -2,10 +2,6 @@ import { useRouter } from "next/router";
 import {
   Star,
   MapPin,
-  School as Pool,
-  UtensilsCrossed,
-  Wine,
-  Power,
   ChevronRight,
   Home,
   Ticket,
@@ -18,6 +14,7 @@ import { ROOM_TYPES } from "@/lib/roomTypes";
 import RoomTypeGrid from "@/components/RoomTypeGrid";
 import Room3DPreview from "@/components/Room3DPreview";
 import { getPreferences, savePreferences } from "@/lib/bookingPreferences";
+import { getHotelExtras } from "@/lib/hotelExtras";
 import {
   Dialog,
   DialogContent,
@@ -94,34 +91,8 @@ const BookHotelPage = () => {
     return <Loader />;
   }
 
-  const hotelData = {
-    name: hotel.hotelName,
-    rating: 3,
-    maxRating: 5,
-    propertyPhotos: 91,
-    guestPhotos: 386,
-    description:
-      "One of the best hotels in North Goa, operating since 2001 catering to international and domestic individual and group travelers.",
-    amenities: [
-      { icon: <Pool className="w-5 h-5" />, name: "Swimming Pool" },
-      { icon: <UtensilsCrossed className="w-5 h-5" />, name: "Restaurant" },
-      { icon: <Wine className="w-5 h-5" />, name: "Bar" },
-      { icon: <Power className="w-5 h-5" />, name: "Power Backup" },
-    ],
-    location: {
-      area: hotel.location,
-      distance: "7 minutes walk to Candolim Beach",
-    },
-    reviews: {
-      rating: 3.8,
-      count: 784,
-      text: "Very Good",
-    },
-    room: {
-      taxes: 527,
-      discountedPrice: 664,
-    },
-  };
+  const extras = getHotelExtras(hotel.id, hotel.location);
+  const ratingStars = Math.round(extras.rating);
 
   const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number.parseInt(e.target.value);
@@ -130,8 +101,8 @@ const BookHotelPage = () => {
 
   const roomAdjustedPrice = Math.round(liveHotelPrice * selectedRoomType.multiplier);
   const totalPrice = roomAdjustedPrice * quantity;
-  const totalTaxes = hotelData.room.taxes * quantity;
-  const totalDiscounts = hotelData.room.discountedPrice * quantity;
+  const totalTaxes = Math.round(totalPrice * 0.08);
+  const totalDiscounts = Math.round(totalPrice * 0.05);
   const grandTotal = totalPrice + totalTaxes - totalDiscounts;
 
   const handleBooking = async (e: React.FormEvent) => {
@@ -296,37 +267,24 @@ const BookHotelPage = () => {
                     {hotel.location}
                   </p>
                 </div>
-                <div className="inline-flex items-center gap-3 rounded-2xl bg-sky-50 px-4 py-3 text-sm text-slate-700">
-                  <div className="flex items-center gap-0.5 text-amber-500">
-                    {[...Array(hotelData.rating)].map((_, index) => (
-                      <Star key={index} className="h-4 w-4 fill-amber-500" />
-                    ))}
-                    {[...Array(hotelData.maxRating - hotelData.rating)].map((_, index) => (
-                      <Star key={index} className="h-4 w-4 text-slate-300" />
-                    ))}
-                  </div>
-                  <span className="font-medium">
-                    {hotelData.reviews.rating} / 5 · {hotelData.reviews.count} reviews
-                  </span>
-                </div>
               </div>
 
               <div className="mt-8 grid gap-4 lg:grid-cols-[2fr_1fr]">
                 <div className="overflow-hidden rounded-[28px] bg-slate-100">
                   <img
-                    src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200"
+                    src={extras.images[0]}
                     alt="Hotel main"
                     className="h-full min-h-[360px] w-full object-cover transition duration-500 hover:scale-[1.02]"
                   />
                 </div>
                 <div className="grid gap-4">
                   <img
-                    src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800"
+                    src={extras.images[1]}
                     alt="Hotel room"
                     className="h-[176px] w-full rounded-[28px] object-cover transition duration-500 hover:scale-[1.02]"
                   />
                   <img
-                    src="https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800"
+                    src={extras.images[2]}
                     alt="Hotel lounge"
                     className="h-[176px] w-full rounded-[28px] object-cover transition duration-500 hover:scale-[1.02]"
                   />
@@ -339,7 +297,7 @@ const BookHotelPage = () => {
                     Designed for a premium stay
                   </h2>
                   <p className="mt-4 leading-7 text-slate-600">
-                    {hotelData.description}
+                    {extras.description}
                   </p>
                 </div>
                 <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
@@ -347,54 +305,12 @@ const BookHotelPage = () => {
                     Location
                   </p>
                   <p className="mt-3 text-lg font-semibold text-slate-900">
-                    {hotelData.location.area}
+                    {hotel.location}
                   </p>
                   <p className="mt-2 text-slate-600">
-                    {hotelData.location.distance}
+                    {extras.distanceText}
                   </p>
                 </div>
-              </div>
-            </section>
-
-            <section className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-              <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
-                <h3 className="mb-4 text-xl font-semibold tracking-tight text-slate-900">
-                  Amenities
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {hotelData.amenities.map((amenity, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-3 rounded-3xl border border-slate-200 bg-slate-50 p-4 text-slate-700 transition hover:border-slate-300 hover:bg-white hover:shadow-sm"
-                    >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-slate-600 ring-1 ring-slate-200">
-                        {amenity.icon}
-                      </span>
-                      <span className="font-medium">{amenity.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
-                <h3 className="mb-4 text-xl font-semibold tracking-tight text-slate-900">
-                  Guest score
-                </h3>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-semibold tracking-tight text-slate-900">
-                    {hotelData.reviews.rating}
-                  </span>
-                  <span className="text-sm font-medium text-slate-400">/ 5</span>
-                </div>
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className="h-full rounded-full bg-emerald-500"
-                    style={{ width: `${(hotelData.reviews.rating / 5) * 100}%` }}
-                  />
-                </div>
-                <p className="mt-3 text-slate-600">
-                  <span className="font-semibold text-emerald-600">{hotelData.reviews.text}</span>{" "}
-                  rating based on recent guest stays.
-                </p>
               </div>
             </section>
 
@@ -500,6 +416,33 @@ const BookHotelPage = () => {
                   )}
                 </Dialog>
               </div>
+            </div>
+
+            <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
+              <div className="mb-4 flex items-center gap-0.5 text-amber-500">
+                {[...Array(ratingStars)].map((_, index) => (
+                  <Star key={index} className="h-4 w-4 fill-amber-500" />
+                ))}
+                {[...Array(5 - ratingStars)].map((_, index) => (
+                  <Star key={index} className="h-4 w-4 text-slate-300" />
+                ))}
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-semibold tracking-tight text-slate-900">
+                  {extras.rating}
+                </span>
+                <span className="text-sm font-medium text-slate-400">/ 5</span>
+              </div>
+              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-emerald-500"
+                  style={{ width: `${(extras.rating / 5) * 100}%` }}
+                />
+              </div>
+              <p className="mt-3 text-slate-600">
+                <span className="font-semibold text-emerald-600">{extras.reviewText}</span>{" "}
+                · {extras.reviewCount} reviews
+              </p>
             </div>
 
             <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
