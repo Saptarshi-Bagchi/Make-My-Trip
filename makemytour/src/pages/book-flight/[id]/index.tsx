@@ -15,8 +15,15 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
-import { getflight, handleflightbooking } from "@/api";
+import {
+  getflight,
+  handleflightbooking,
+  addFlightReview,
+  replyFlightReview,
+  flagFlightReview,
+} from "@/api";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import ReviewSection, { type Review } from "@/components/ReviewSection";
 import { generateSeatMap, calculateSeatSurcharge, Seat } from "@/lib/seatMap";
 import FlightSeatMap from "@/components/FlightSeatMap";
 import { getPreferences, savePreferences } from "@/lib/bookingPreferences";
@@ -30,6 +37,7 @@ interface Flight {
   arrivalTime: string; // Arrival time (ISO 8601 string recommended)
   price: number; // Price of the flight
   availableSeats: number; // Number of available seats
+  reviews?: Review[];
 }
 import {
   Dialog,
@@ -235,6 +243,45 @@ const BookFlightPage = () => {
       console.log(error);
     }
   };
+
+  const handleReviewSubmit = async (payload: {
+    rating: number;
+    text: string;
+    images: string[];
+  }) => {
+    if (!flight?.id || !user?.id) return;
+    const updatedFlight = await addFlightReview(flight.id, {
+      userId: user.id,
+      username: `${user.firstName} ${user.lastName}`,
+      rating: payload.rating,
+      text: payload.text,
+      images: payload.images,
+    });
+    setFlights([updatedFlight]);
+  };
+
+  const handleReviewReply = async (reviewId: string, text: string) => {
+    if (!flight?.id || !user?.id) return;
+    const updatedFlight = await replyFlightReview(flight.id, reviewId, {
+      userId: user.id,
+      username: `${user.firstName} ${user.lastName}`,
+      text,
+    });
+    setFlights([updatedFlight]);
+  };
+
+  const handleReviewFlag = async (reviewId: string) => {
+    if (!flight?.id) return;
+    const updatedFlight = await flagFlightReview(flight.id, reviewId);
+    setFlights([updatedFlight]);
+  };
+
+  const flightReviews = flight?.reviews ?? [];
+  const averageFlightRating =
+    flightReviews.length > 0
+      ? flightReviews.reduce((sum, review) => sum + review.rating, 0) / flightReviews.length
+      : 0;
+
   const BookingContent = () => (
     <DialogContent className="sm:max-w-[600px] bg-white">
       <DialogHeader>
@@ -564,8 +611,17 @@ const BookFlightPage = () => {
                 ))}
               </div>
             </div>
-          </div>
 
+            <ReviewSection
+              title="Flight reviews"
+              reviews={flightReviews}
+              currentUser={user}
+              onSubmitReview={handleReviewSubmit}
+              onSubmitReply={handleReviewReply}
+              onFlagReview={handleReviewFlag}
+            />
+          </div>
+ 
           {/* Fare Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">

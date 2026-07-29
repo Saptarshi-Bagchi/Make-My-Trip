@@ -9,8 +9,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useEffect, useState, type ChangeEvent } from "react";
-import { gethotel, handlehotelbooking } from "@/api";
+import { gethotel, handlehotelbooking, addHotelReview, replyHotelReview, flagHotelReview } from "@/api";
 import { ROOM_TYPES } from "@/lib/roomTypes";
+import ReviewSection, { type Review } from "@/components/ReviewSection";
 import RoomTypeGrid from "@/components/RoomTypeGrid";
 import Room3DPreview from "@/components/Room3DPreview";
 import { getPreferences, savePreferences } from "@/lib/bookingPreferences";
@@ -38,6 +39,7 @@ interface Hotel {
   pricePerNight: number;
   availableRooms: number;
   amenities: string;
+  reviews?: Review[];
 }
 
 const BookHotelPage = () => {
@@ -130,6 +132,45 @@ const BookHotelPage = () => {
       console.error(error);
     }
   };
+
+  const handleReviewSubmit = async (payload: {
+    rating: number;
+    text: string;
+    images: string[];
+  }) => {
+    if (!hotel?.id || !user?.id) return;
+    const updatedHotel = await addHotelReview(hotel.id, {
+      userId: user.id,
+      username: `${user.firstName} ${user.lastName}`,
+      rating: payload.rating,
+      text: payload.text,
+      images: payload.images,
+    });
+    setHotels([updatedHotel]);
+  };
+
+  const handleReviewReply = async (reviewId: string, text: string) => {
+    if (!hotel?.id || !user?.id) return;
+    const updatedHotel = await replyHotelReview(hotel.id, reviewId, {
+      userId: user.id,
+      username: `${user.firstName} ${user.lastName}`,
+      text,
+    });
+    setHotels([updatedHotel]);
+  };
+
+  const handleReviewFlag = async (reviewId: string) => {
+    if (!hotel?.id) return;
+    const updatedHotel = await flagHotelReview(hotel.id, reviewId);
+    setHotels([updatedHotel]);
+  };
+
+  const hotelReviews = hotel?.reviews ?? [];
+  const displayedRating =
+    hotelReviews.length > 0
+      ? hotelReviews.reduce((sum, review) => sum + review.rating, 0) / hotelReviews.length
+      : extras.rating;
+  const reviewCount = hotelReviews.length;
 
   const HotelContent = () => (
     <DialogContent className="sm:max-w-[600px] bg-white">
@@ -351,6 +392,15 @@ const BookHotelPage = () => {
                 </div>
               </div>
             </section>
+
+            <ReviewSection
+              title="Hotel reviews"
+              reviews={hotelReviews}
+              currentUser={user}
+              onSubmitReview={handleReviewSubmit}
+              onSubmitReply={handleReviewReply}
+              onFlagReview={handleReviewFlag}
+            />
           </div>
 
           <aside className="space-y-6">
@@ -420,28 +470,30 @@ const BookHotelPage = () => {
 
             <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
               <div className="mb-4 flex items-center gap-0.5 text-amber-500">
-                {[...Array(ratingStars)].map((_, index) => (
+                {[...Array(Math.round(displayedRating))].map((_, index) => (
                   <Star key={index} className="h-4 w-4 fill-amber-500" />
                 ))}
-                {[...Array(5 - ratingStars)].map((_, index) => (
+                {[...Array(5 - Math.round(displayedRating))].map((_, index) => (
                   <Star key={index} className="h-4 w-4 text-slate-300" />
                 ))}
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl font-semibold tracking-tight text-slate-900">
-                  {extras.rating}
+                  {displayedRating.toFixed(1)}
                 </span>
                 <span className="text-sm font-medium text-slate-400">/ 5</span>
               </div>
               <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                 <div
                   className="h-full rounded-full bg-emerald-500"
-                  style={{ width: `${(extras.rating / 5) * 100}%` }}
+                  style={{ width: `${(displayedRating / 5) * 100}%` }}
                 />
               </div>
               <p className="mt-3 text-slate-600">
-                <span className="font-semibold text-emerald-600">{extras.reviewText}</span>{" "}
-                · {extras.reviewCount} reviews
+                <span className="font-semibold text-emerald-600">
+                  {reviewCount > 0 ? "Reviewed by guests" : extras.reviewText}
+                </span>{" "}
+                · {reviewCount > 0 ? reviewCount : extras.reviewCount} reviews
               </p>
             </div>
 

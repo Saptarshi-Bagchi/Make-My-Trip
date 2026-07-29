@@ -99,6 +99,36 @@ export const addflight = async (
   }
 };
 
+export const addFlightReview = async (flightId, review) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/flight/${flightId}/review`, review);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const replyFlightReview = async (flightId, reviewId, reply) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/flight/${flightId}/review/${reviewId}/reply`, reply);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const flagFlightReview = async (flightId, reviewId) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/flight/${flightId}/review/${reviewId}/flag`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+ 
 export const editflight = async (
   id,
   flightName,
@@ -136,6 +166,36 @@ export const gethotel = async () => {
   }
 };
 
+export const addHotelReview = async (hotelId, review) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/hotel/${hotelId}/review`, review);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const replyHotelReview = async (hotelId, reviewId, reply) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/hotel/${hotelId}/review/${reviewId}/reply`, reply);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const flagHotelReview = async (hotelId, reviewId) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/hotel/${hotelId}/review/${reviewId}/flag`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+ 
 export const addhotel = async (
   hotelName,
   location,
