@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import {
-  Star,
   MapPin,
   ChevronRight,
   Home,
@@ -8,14 +7,13 @@ import {
   CreditCard,
   ShieldCheck,
 } from "lucide-react";
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { gethotel, handlehotelbooking, addHotelReview, replyHotelReview, flagHotelReview } from "@/api";
 import { ROOM_TYPES } from "@/lib/roomTypes";
 import ReviewSection, { type Review } from "@/components/ReviewSection";
-import RoomTypeGrid from "@/components/RoomTypeGrid";
 import Room3DPreview from "@/components/Room3DPreview";
+import RoomTypeGrid from "@/components/RoomTypeGrid";
 import { getPreferences, savePreferences } from "@/lib/bookingPreferences";
-import { getHotelExtras } from "@/lib/hotelExtras";
 import {
   Dialog,
   DialogContent,
@@ -69,10 +67,6 @@ const BookHotelPage = () => {
 
   const hotel = hotels[0];
   const hotelReviews = hotel?.reviews ?? [];
-  const reviewCount = hotelReviews.length;
-  const displayedRating = reviewCount
-    ? hotelReviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount
-    : getHotelExtras(hotel?.id ?? "", hotel?.location ?? "").rating;
 
   const handleReviewSubmit = async (payload: { rating: number; text: string; images: string[] }) => {
     if (!hotel?.id || !user) return;
@@ -136,12 +130,16 @@ const BookHotelPage = () => {
 
   const selectedRoomType = ROOM_TYPES.find((r) => r.id === selectedRoomTypeId) ?? ROOM_TYPES[0];
 
+  const hotelGalleryImages = useMemo(() => {
+    const pool = ROOM_TYPES.flatMap((room) => room.images);
+    const uniqueImages = Array.from(new Set(pool));
+    const shuffled = [...uniqueImages].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 3);
+  }, [selectedRoomTypeId]);
+
   if (loading || !hotel) {
     return <Loader />;
   }
-
-  const extras = getHotelExtras(hotel.id, hotel.location);
-  const ratingStars = Math.round(extras.rating);
 
   const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number.parseInt(e.target.value);
@@ -154,8 +152,7 @@ const BookHotelPage = () => {
   const totalDiscounts = Math.round(totalPrice * 0.05);
   const grandTotal = totalPrice + totalTaxes - totalDiscounts;
 
-  const handleBooking = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleBooking = async () => {
     try {
       const data = await handlehotelbooking(
         user?.id,
@@ -180,112 +177,6 @@ const BookHotelPage = () => {
     }
   };
 
-  const HotelContent = () => (
-    <DialogContent className="sm:max-w-[600px] bg-white">
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-3 text-2xl font-bold text-slate-900">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-            <Home className="h-5 w-5" />
-          </span>
-          Hotel Booking Details
-        </DialogTitle>
-      </DialogHeader>
-      <div className="grid gap-6 mt-4">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="hotelName" className="flex items-center gap-2 text-slate-600">
-              <MapPin className="w-4 h-4" />
-              Hotel Name
-            </Label>
-            <Input id="hotelName" value={hotel.hotelName} readOnly className="bg-slate-50" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location" className="flex items-center gap-2 text-slate-600">
-              <MapPin className="w-4 h-4" />
-              Location
-            </Label>
-            <Input id="location" value={hotel.location} readOnly className="bg-slate-50" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="pricePerNight" className="flex items-center gap-2 text-slate-600">
-              <Ticket className="w-4 h-4" />
-              Price Per Night
-            </Label>
-            <Input
-              id="pricePerNight"
-              value={`₹ ${liveHotelPrice.toLocaleString()}`}
-              readOnly
-              className="bg-slate-50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="availableRooms" className="flex items-center gap-2 text-slate-600">
-              <Ticket className="w-4 h-4" />
-              Available Rooms
-            </Label>
-            <Input
-              id="availableRooms"
-              value={hotel.availableRooms}
-              readOnly
-              className="bg-slate-50"
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="quantity" className="flex items-center gap-2 text-slate-600">
-              <Ticket className="w-4 h-4" />
-              Number of Rooms
-            </Label>
-            <Input
-              id="quantity"
-              type="number"
-              min="1"
-              max={hotel.availableRooms}
-              value={quantity}
-              onChange={handleQuantityChange}
-            />
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-900">
-            <CreditCard className="h-5 w-5 text-slate-700" />
-            Fare Summary
-          </div>
-          <div className="space-y-3 text-sm text-slate-600">
-            <div className="flex justify-between">
-              <span>Base fare</span>
-              <span className="font-medium text-slate-800">
-                ₹{totalPrice.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Taxes</span>
-              <span className="font-medium text-slate-800">
-                ₹{totalTaxes.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between text-emerald-600">
-              <span>Discount</span>
-              <span className="font-medium">
-                - ₹{Math.abs(totalDiscounts).toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between border-t border-slate-200 pt-3 text-base font-semibold text-slate-900">
-              <span>Total</span>
-              <span>₹{grandTotal.toLocaleString()}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Button
-        className="mt-4 w-full transition hover:shadow-md"
-        onClick={handleBooking}
-      >
-        Proceed to Payment
-      </Button>
-    </DialogContent>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="border-b bg-white">
@@ -303,10 +194,31 @@ const BookHotelPage = () => {
       </div>
 
       <main className="mx-auto max-w-7xl px-4 py-8 lg:py-10">
-        <div className="grid gap-8 lg:grid-cols-[2.2fr_0.8fr]">
+        <div className="grid gap-8 lg:grid-cols-[1.8fr_0.95fr] lg:items-start">
           <div className="space-y-8">
             <section className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="grid gap-4 lg:grid-cols-[1.7fr_0.95fr]">
+                <div className="overflow-hidden rounded-[28px] bg-slate-100 lg:h-[420px]">
+                  <img
+                    src={hotelGalleryImages[0]}
+                    alt={`${hotel.hotelName} room photo 1`}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="grid gap-4">
+                  {hotelGalleryImages.slice(1).map((src, index) => (
+                    <div key={index} className="overflow-hidden rounded-[28px] bg-slate-100 h-[204px] lg:h-[205px]">
+                      <img
+                        src={src}
+                        alt={`${hotel.hotelName} room photo ${index + 2}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
                     {hotel.hotelName}
@@ -317,65 +229,16 @@ const BookHotelPage = () => {
                   </p>
                 </div>
               </div>
-
-              <div className="mt-8 grid gap-4 lg:grid-cols-[2fr_1fr]">
-                <div className="overflow-hidden rounded-[28px] bg-slate-100">
-                  <img
-                    src={extras.images[0]}
-                    alt="Hotel main"
-                    className="h-full min-h-[360px] w-full object-cover transition duration-500 hover:scale-[1.02]"
-                  />
-                </div>
-                <div className="grid gap-4">
-                  <img
-                    src={extras.images[1]}
-                    alt="Hotel room"
-                    className="h-[176px] w-full rounded-[28px] object-cover transition duration-500 hover:scale-[1.02]"
-                  />
-                  <img
-                    src={extras.images[2]}
-                    alt="Hotel lounge"
-                    className="h-[176px] w-full rounded-[28px] object-cover transition duration-500 hover:scale-[1.02]"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-8 lg:grid lg:grid-cols-[1.7fr_0.9fr] lg:items-start lg:gap-6">
-                <div>
-                  <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
-                    Designed for a premium stay
-                  </h2>
-                  <p className="mt-4 leading-7 text-slate-600">
-                    {extras.description}
-                  </p>
-                </div>
-                <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                    Location
-                  </p>
-                  <p className="mt-3 text-lg font-semibold text-slate-900">
-                    {hotel.location}
-                  </p>
-                  <p className="mt-2 text-slate-600">
-                    {extras.distanceText}
-                  </p>
-                </div>
-              </div>
             </section>
 
             <section className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
-              <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                    Choose your room
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
-                    {selectedRoomType.name}
-                  </h2>
-                </div>
-                <span className="whitespace-nowrap rounded-3xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
-                  Best value
-                </span>
+              <div className="mb-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                  Choose your room
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+                  {selectedRoomType.name}
+                </h2>
               </div>
 
               <RoomTypeGrid
@@ -385,30 +248,18 @@ const BookHotelPage = () => {
                 onSelect={setSelectedRoomTypeId}
               />
 
-              <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-                <Room3DPreview images={selectedRoomType.images} name={selectedRoomType.name} />
-                <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
-                  <h3 className="mb-3 font-semibold text-slate-900">What's included</h3>
-                  <div className="space-y-2.5">
-                    {selectedRoomType.amenities.slice(0, 3).map((feature, index) => (
-                      <div key={index} className="flex items-center gap-2 text-slate-700">
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="mt-6 rounded-[28px] border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
+                <h3 className="mb-3 font-semibold text-slate-900">What's included</h3>
+                <div className="space-y-2.5">
+                  {selectedRoomType.amenities.slice(0, 3).map((feature, index) => (
+                    <div key={index} className="flex items-center gap-2 text-slate-700">
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </section>
-
-            <ReviewSection
-              title="Hotel reviews"
-              reviews={hotelReviews}
-              currentUser={user}
-              onSubmitReview={handleReviewSubmit}
-              onSubmitReply={handleReviewReply}
-              onFlagReview={handleReviewFlag}
-            />
           </div>
 
           <aside className="space-y-6">
@@ -579,35 +430,6 @@ const BookHotelPage = () => {
             </div>
 
             <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
-              <div className="mb-4 flex items-center gap-0.5 text-amber-500">
-                {[...Array(Math.round(displayedRating))].map((_, index) => (
-                  <Star key={index} className="h-4 w-4 fill-amber-500" />
-                ))}
-                {[...Array(5 - Math.round(displayedRating))].map((_, index) => (
-                  <Star key={index} className="h-4 w-4 text-slate-300" />
-                ))}
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-semibold tracking-tight text-slate-900">
-                  {displayedRating.toFixed(1)}
-                </span>
-                <span className="text-sm font-medium text-slate-400">/ 5</span>
-              </div>
-              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                <div
-                  className="h-full rounded-full bg-emerald-500"
-                  style={{ width: `${(displayedRating / 5) * 100}%` }}
-                />
-              </div>
-              <p className="mt-3 text-slate-600">
-                <span className="font-semibold text-emerald-600">
-                  {reviewCount > 0 ? "Reviewed by guests" : extras.reviewText}
-                </span>{" "}
-                · {reviewCount > 0 ? reviewCount : extras.reviewCount} reviews
-              </p>
-            </div>
-
-            <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Good to know
               </h3>
@@ -642,7 +464,22 @@ const BookHotelPage = () => {
                 </li>
               </ul>
             </div>
+
+            <div className="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
+              <Room3DPreview name={selectedRoomType.name} images={selectedRoomType.images} />
+            </div>
           </aside>
+        </div>
+
+        <div className="mt-10">
+          <ReviewSection
+            title="Hotel reviews"
+            reviews={hotelReviews}
+            currentUser={user}
+            onSubmitReview={handleReviewSubmit}
+            onSubmitReply={handleReviewReply}
+            onFlagReview={handleReviewFlag}
+          />
         </div>
       </main>
     </div>
