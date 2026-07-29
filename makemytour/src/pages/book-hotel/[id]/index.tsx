@@ -131,112 +131,6 @@ const BookHotelPage = () => {
     }
   };
 
-  const HotelContent = () => (
-    <DialogContent className="sm:max-w-[600px] bg-white">
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-3 text-2xl font-bold text-slate-900">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-            <Home className="h-5 w-5" />
-          </span>
-          Hotel Booking Details
-        </DialogTitle>
-      </DialogHeader>
-      <div className="grid gap-6 mt-4">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="hotelName" className="flex items-center gap-2 text-slate-600">
-              <MapPin className="w-4 h-4" />
-              Hotel Name
-            </Label>
-            <Input id="hotelName" value={hotel.hotelName} readOnly className="bg-slate-50" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location" className="flex items-center gap-2 text-slate-600">
-              <MapPin className="w-4 h-4" />
-              Location
-            </Label>
-            <Input id="location" value={hotel.location} readOnly className="bg-slate-50" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="pricePerNight" className="flex items-center gap-2 text-slate-600">
-              <Ticket className="w-4 h-4" />
-              Price Per Night
-            </Label>
-            <Input
-              id="pricePerNight"
-              value={`₹ ${liveHotelPrice.toLocaleString()}`}
-              readOnly
-              className="bg-slate-50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="availableRooms" className="flex items-center gap-2 text-slate-600">
-              <Ticket className="w-4 h-4" />
-              Available Rooms
-            </Label>
-            <Input
-              id="availableRooms"
-              value={hotel.availableRooms}
-              readOnly
-              className="bg-slate-50"
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="quantity" className="flex items-center gap-2 text-slate-600">
-              <Ticket className="w-4 h-4" />
-              Number of Rooms
-            </Label>
-            <Input
-              id="quantity"
-              type="number"
-              min="1"
-              max={hotel.availableRooms}
-              value={quantity}
-              onChange={handleQuantityChange}
-            />
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-900">
-            <CreditCard className="h-5 w-5 text-slate-700" />
-            Fare Summary
-          </div>
-          <div className="space-y-3 text-sm text-slate-600">
-            <div className="flex justify-between">
-              <span>Base fare</span>
-              <span className="font-medium text-slate-800">
-                ₹{totalPrice.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Taxes</span>
-              <span className="font-medium text-slate-800">
-                ₹{totalTaxes.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between text-emerald-600">
-              <span>Discount</span>
-              <span className="font-medium">
-                - ₹{Math.abs(totalDiscounts).toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between border-t border-slate-200 pt-3 text-base font-semibold text-slate-900">
-              <span>Total</span>
-              <span>₹{grandTotal.toLocaleString()}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Button
-        className="mt-4 w-full transition hover:shadow-md"
-        onClick={handleBooking}
-      >
-        Proceed to Payment
-      </Button>
-    </DialogContent>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="border-b bg-white">
@@ -400,7 +294,109 @@ const BookHotelPage = () => {
                     </button>
                   </DialogTrigger>
                   {user ? (
-                    <HotelContent />
+                    <DialogContent className="sm:max-w-[600px] bg-white">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-3 text-2xl font-bold text-slate-900">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                            <Home className="h-5 w-5" />
+                          </span>
+                          Hotel Booking Details
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-6 mt-4">
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="hotelName" className="flex items-center gap-2 text-slate-600">
+                              <MapPin className="w-4 h-4" />
+                              Hotel Name
+                            </Label>
+                            <Input id="hotelName" value={hotel.hotelName} readOnly className="bg-slate-50" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="location" className="flex items-center gap-2 text-slate-600">
+                              <MapPin className="w-4 h-4" />
+                              Location
+                            </Label>
+                            <Input id="location" value={hotel.location} readOnly className="bg-slate-50" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="pricePerNight" className="flex items-center gap-2 text-slate-600">
+                              <Ticket className="w-4 h-4" />
+                              Price Per Night
+                            </Label>
+                            <Input
+                              id="pricePerNight"
+                              value={`₹ ${liveHotelPrice.toLocaleString()}`}
+                              readOnly
+                              className="bg-slate-50"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="availableRooms" className="flex items-center gap-2 text-slate-600">
+                              <Ticket className="w-4 h-4" />
+                              Available Rooms
+                            </Label>
+                            <Input
+                              id="availableRooms"
+                              value={hotel.availableRooms}
+                              readOnly
+                              className="bg-slate-50"
+                            />
+                          </div>
+                          <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="quantity" className="flex items-center gap-2 text-slate-600">
+                              <Ticket className="w-4 h-4" />
+                              Number of Rooms
+                            </Label>
+                            <Input
+                              id="quantity"
+                              type="number"
+                              min="1"
+                              max={hotel.availableRooms}
+                              value={quantity}
+                              onChange={handleQuantityChange}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                          <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-900">
+                            <CreditCard className="h-5 w-5 text-slate-700" />
+                            Fare Summary
+                          </div>
+                          <div className="space-y-3 text-sm text-slate-600">
+                            <div className="flex justify-between">
+                              <span>Base fare</span>
+                              <span className="font-medium text-slate-800">
+                                ₹{totalPrice.toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Taxes</span>
+                              <span className="font-medium text-slate-800">
+                                ₹{totalTaxes.toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="flex justify-between text-emerald-600">
+                              <span>Discount</span>
+                              <span className="font-medium">
+                                - ₹{Math.abs(totalDiscounts).toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="flex justify-between border-t border-slate-200 pt-3 text-base font-semibold text-slate-900">
+                              <span>Total</span>
+                              <span>₹{grandTotal.toLocaleString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        className="mt-4 w-full transition hover:shadow-md"
+                        onClick={handleBooking}
+                      >
+                        Proceed to Payment
+                      </Button>
+                    </DialogContent>
                   ) : (
                     <DialogContent className="bg-white">
                       <DialogHeader>
