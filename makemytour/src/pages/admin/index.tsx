@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTheme } from "@/components/ThemeContext";
 import {
   Card,
   CardContent,
@@ -30,6 +31,7 @@ import {
   getuserbyemail,
 } from "@/api";
 import HotelList from "@/components/Hotel/Hotel";
+
 const mockFlights = [
   {
     _id: "1",
@@ -98,7 +100,7 @@ interface User {
   phoneNumber: string;
 }
 
-function UserSearch() {
+function UserSearch({ isDark }: { isDark: boolean }) {
   const [email, setEmail] = useState("");
   const [user, setUser] = useState<User | null>(null);
 
@@ -123,24 +125,32 @@ function UserSearch() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className={isDark ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] placeholder-[#7C948F]" : "bg-white border-[#DCE7E4] text-[#1F3330]"}
           />
         </div>
-        <Button type="submit">Search</Button>
+        <Button 
+          type="submit"
+          className={`text-white transition-colors ${
+            isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+          }`}
+        >
+          Search
+        </Button>
       </form>
       {user && (
-        <div className="border p-4 rounded-md">
-          <h3 className="font-bold mb-2">User Details</h3>
-          <p>
-            <strong>Name:</strong> {user.firstName} {user.lastName}
+        <div className={`border p-4 rounded-md transition-colors ${isDark ? "bg-[#162624] border-[#24413D]" : "bg-[#F1F6F5] border-[#E3ECE9]"}`}>
+          <h3 className={`font-bold mb-2 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>User Details</h3>
+          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
+            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Name:</strong> {user.firstName} {user.lastName}
           </p>
-          <p>
-            <strong>Email:</strong> {user.email}
+          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
+            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Email:</strong> {user.email}
           </p>
-          <p>
-            <strong>Role:</strong> {user.role}
+          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
+            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Role:</strong> {user.role}
           </p>
-          <p>
-            <strong>Phone:</strong> {user.phoneNumber}
+          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
+            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Phone:</strong> {user.phoneNumber}
           </p>
         </div>
       )}
@@ -157,7 +167,7 @@ interface Hotel {
   amenities: string;
 }
 
-function AddEditHotel({ hotel }: { hotel: Hotel | null }) {
+function AddEditHotel({ hotel, isDark }: { hotel: Hotel | null; isDark: boolean }) {
   const [formData, setFormData] = useState<Hotel>({
     hotelName: "",
     location: "",
@@ -218,33 +228,39 @@ function AddEditHotel({ hotel }: { hotel: Hotel | null }) {
     }
   };
 
+  const inputStyles = isDark 
+    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4]" 
+    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className="text-lg font-semibold mb-2">
+      <h3 className={`text-lg font-semibold mb-2 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>
         {hotel ? "Edit Hotel" : "Add New Hotel"}
       </h3>
       <div>
-        <Label htmlFor="hotelName">Hotel Name</Label>
+        <Label htmlFor="hotelName" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Hotel Name</Label>
         <Input
           id="hotelName"
           name="hotelName"
           value={formData.hotelName}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="location">Location</Label>
+        <Label htmlFor="location" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Location</Label>
         <Input
           id="location"
           name="location"
           value={formData.location}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="pricePerNight">Price Per Night</Label>
+        <Label htmlFor="pricePerNight" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Price Per Night</Label>
         <Input
           id="pricePerNight"
           name="pricePerNight"
@@ -252,10 +268,11 @@ function AddEditHotel({ hotel }: { hotel: Hotel | null }) {
           value={formData.pricePerNight}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="availableRooms">Available Rooms</Label>
+        <Label htmlFor="availableRooms" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Available Rooms</Label>
         <Input
           id="availableRooms"
           name="availableRooms"
@@ -263,19 +280,28 @@ function AddEditHotel({ hotel }: { hotel: Hotel | null }) {
           value={formData.availableRooms}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="amenities">Amenities</Label>
+        <Label htmlFor="amenities" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Amenities</Label>
         <Textarea
           id="amenities"
           name="amenities"
           value={formData.amenities}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
-      <Button type="submit">{hotel ? "Update Hotel" : "Add Hotel"}</Button>
+      <Button 
+        type="submit"
+        className={`text-white transition-colors ${
+          isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+        }`}
+      >
+        {hotel ? "Update Hotel" : "Add Hotel"}
+      </Button>
     </form>
   );
 }
@@ -291,7 +317,7 @@ interface Flight {
   availableSeats: number;
 }
 
-function AddEditFlight({ flight }: { flight: Flight | null }) {
+function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: boolean }) {
   const [formData, setFormData] = useState<Flight>({
     flightName: "",
     from: "",
@@ -325,7 +351,6 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send this data to your backend
     console.log("Submitting flight data:", formData);
     if (flight) {
       await editflight(
@@ -362,43 +387,50 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
     }
   };
 
+  const inputStyles = isDark 
+    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4]" 
+    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className="text-lg font-semibold mb-2">
+      <h3 className={`text-lg font-semibold mb-2 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>
         {flight ? "Edit Flight" : "Add New Flight"}
       </h3>
       <div>
-        <Label htmlFor="flightName">Flight Name</Label>
+        <Label htmlFor="flightName" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Flight Name</Label>
         <Input
           id="flightName"
           name="flightName"
           value={formData.flightName}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="from">From</Label>
+        <Label htmlFor="from" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>From</Label>
         <Input
           id="from"
           name="from"
           value={formData.from}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="to">To</Label>
+        <Label htmlFor="to" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>To</Label>
         <Input
           id="to"
           name="to"
           value={formData.to}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="departureTime">Departure Time</Label>
+        <Label htmlFor="departureTime" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Departure Time</Label>
         <Input
           id="departureTime"
           name="departureTime"
@@ -406,10 +438,11 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
           value={formData.departureTime}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="arrivalTime">Arrival Time</Label>
+        <Label htmlFor="arrivalTime" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Arrival Time</Label>
         <Input
           id="arrivalTime"
           name="arrivalTime"
@@ -417,10 +450,11 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
           value={formData.arrivalTime}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="price">Price</Label>
+        <Label htmlFor="price" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Price</Label>
         <Input
           id="price"
           name="price"
@@ -428,10 +462,11 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
           value={formData.price}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
       <div>
-        <Label htmlFor="availableSeats">Available Seats</Label>
+        <Label htmlFor="availableSeats" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Available Seats</Label>
         <Input
           id="availableSeats"
           name="availableSeats"
@@ -439,67 +474,110 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
           value={formData.availableSeats}
           onChange={handleChange}
           required
+          className={inputStyles}
         />
       </div>
-      <Button type="submit">{flight ? "Update Flight" : "Add Flight"}</Button>
+      <Button 
+        type="submit"
+        className={`text-white transition-colors ${
+          isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+        }`}
+      >
+        {flight ? "Update Flight" : "Add Flight"}
+      </Button>
     </form>
   );
 }
 
 export default function AdminDashboard() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [activeTab, setActiveTab] = useState("flights");
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
 
+  const cardStyles = isDark 
+    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
+    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.25)] text-[#22322F]";
+
+  const tabTriggerStyles = (isActive: boolean) => {
+    if (isDark) {
+      return isActive 
+        ? "text-[#7FD1C4] bg-[#162624]" 
+        : "text-[#7C948F] hover:text-[#7FD1C4]";
+    }
+    return isActive 
+      ? "text-[#3E6E6A] bg-[#EAF2F0]" 
+      : "text-[#7C948F] hover:text-[#3E6E6A]";
+  };
+
+  const scrollbarStyles = isDark
+    ? "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#162624] [&::-webkit-scrollbar-thumb]:bg-[#3E6E6A] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#4A8580]"
+    : "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#F1F6F5] [&::-webkit-scrollbar-thumb]:bg-[#DCE7E4] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#C3D4D0]";
+
   return (
-    <div className="container mx-auto p-4 bg-white max-w-full">
-      <h1 className="text-3xl font-bold mb-6 ">Admin Dashboard</h1>
+    <div className={`container mx-auto p-6 max-w-full min-h-screen transition-colors duration-300 ${
+      isDark ? "bg-[#162624] text-[#EAF2F0]" : "bg-[#F1F6F5] text-[#22322F]"
+    }`}>
+      <h1 className={`text-3xl font-bold mb-6 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>
+        Admin Dashboard
+      </h1>
+      
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3  text-black">
-          <TabsTrigger value="flights">Flights</TabsTrigger>
-          <TabsTrigger value="hotels">Hotels</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
+        <TabsList className={`grid w-full grid-cols-3 p-1 rounded-xl mb-6 backdrop-blur border transition-colors ${
+          isDark ? "bg-[#1A302C]/90 border-[#24413D]" : "bg-white/90 border-transparent shadow-sm"
+        }`}>
+          <TabsTrigger value="flights" className={tabTriggerStyles(activeTab === "flights")}>Flights</TabsTrigger>
+          <TabsTrigger value="hotels" className={tabTriggerStyles(activeTab === "hotels")}>Hotels</TabsTrigger>
+          <TabsTrigger value="users" className={tabTriggerStyles(activeTab === "users")}>Users</TabsTrigger>
         </TabsList>
+
         <TabsContent value="flights">
-          <Card>
+          <Card className={cardStyles}>
             <CardHeader>
-              <CardTitle>Manage Flights</CardTitle>
-              <CardDescription>
+              <CardTitle className={`font-display text-xl ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>Manage Flights</CardTitle>
+              <CardDescription className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
                 Add, edit, or remove flights from the system.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <FlightList onSelect={setSelectedFlight} />
-                <AddEditFlight flight={selectedFlight} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className={`max-h-[420px] overflow-y-auto pr-2 custom-scrollbar ${scrollbarStyles}`}>
+                  <FlightList onSelect={setSelectedFlight} />
+                </div>
+                <AddEditFlight flight={selectedFlight} isDark={isDark} />
               </div>
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="hotels">
-          <Card>
+          <Card className={cardStyles}>
             <CardHeader>
-              <CardTitle>Manage Hotels</CardTitle>
-              <CardDescription>
+              <CardTitle className={`font-display text-xl ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>Manage Hotels</CardTitle>
+              <CardDescription className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
                 Add, edit, or remove hotels from the system.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <HotelList onSelect={setSelectedHotel} />
-                <AddEditHotel hotel={selectedHotel} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className={`max-h-[420px] overflow-y-auto pr-2 custom-scrollbar ${scrollbarStyles}`}>
+                  <HotelList onSelect={setSelectedHotel} />
+                </div>
+                <AddEditHotel hotel={selectedHotel} isDark={isDark} />
               </div>
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="users">
-          <Card>
+          <Card className={cardStyles}>
             <CardHeader>
-              <CardTitle>User Management</CardTitle>
-              <CardDescription>Search for users by email.</CardDescription>
+              <CardTitle className={`font-display text-xl ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>User Management</CardTitle>
+              <CardDescription className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>Search for users by email.</CardDescription>
             </CardHeader>
             <CardContent>
-              <UserSearch />
+              <UserSearch isDark={isDark} />
             </CardContent>
           </Card>
         </TabsContent>

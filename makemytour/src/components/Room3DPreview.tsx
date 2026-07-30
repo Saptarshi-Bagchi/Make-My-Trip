@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import * as THREE from "three";
 import { RotateCcw, Move3d } from "lucide-react";
+import { useTheme } from "@/components/ThemeContext";
 
 const WALL_FRONT_IMAGE = "https://images.unsplash.com/photo-1544641724-73f0d1bee38b?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 const WALL_BACK_IMAGE = "https://plus.unsplash.com/premium_photo-1677344201811-4c459a88c538?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -56,12 +57,18 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
   const [ready, setReady] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const yawRef = useRef(0);
   const pitchRef = useRef(0);
   const draggingRef = useRef(false);
   const hasInteractedRef = useRef(false);
   const lastPointer = useRef({ x: 0, y: 0 });
   const resetRef = useRef(() => {});
+
+  // Pass dynamic colors into ThreeJS to handle backdrop canvas color updates
+  const sceneBgColor = isDark ? 0x162624 : 0xf4f7fa;
 
   useEffect(() => {
     const host = hostRef.current;
@@ -71,7 +78,7 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
     const height = host.clientHeight;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe9edf3);
+    scene.background = new THREE.Color(sceneBgColor);
 
     const camera = new THREE.PerspectiveCamera(72, width / height, 0.05, 50);
     camera.rotation.order = "YXZ";
@@ -101,12 +108,12 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
     };
 
     const materials = [
-      surfaceMaterial(WALL_RIGHT_IMAGE, WALL_ASPECT, undefined, "top"), //Bed Image
-      surfaceMaterial(WALL_LEFT_IMAGE, WALL_ASPECT, undefined, "bottom"), //Photo Gallery
-      surfaceMaterial(CEILING_IMAGE, FLOOR_CEILING_ASPECT, 0xe4e8ee), //Ceiling Image
-      surfaceMaterial(FLOOR_IMAGE, FLOOR_CEILING_ASPECT, 0xbfc6d1), //Floor Image
-      surfaceMaterial(WALL_FRONT_IMAGE, WALL_ASPECT, undefined, "center"), //Door Image
-      surfaceMaterial(WALL_BACK_IMAGE, WALL_ASPECT), //Window Image
+      surfaceMaterial(WALL_RIGHT_IMAGE, WALL_ASPECT, undefined, "top"), 
+      surfaceMaterial(WALL_LEFT_IMAGE, WALL_ASPECT, undefined, "bottom"), 
+      surfaceMaterial(CEILING_IMAGE, FLOOR_CEILING_ASPECT, 0xe4e8ee), 
+      surfaceMaterial(FLOOR_IMAGE, FLOOR_CEILING_ASPECT, 0xbfc6d1), 
+      surfaceMaterial(WALL_FRONT_IMAGE, WALL_ASPECT, undefined, "center"), 
+      surfaceMaterial(WALL_BACK_IMAGE, WALL_ASPECT), 
     ];
 
     const geometry = new THREE.BoxGeometry(ROOM_WIDTH, ROOM_HEIGHT, ROOM_DEPTH);
@@ -155,7 +162,7 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
         host.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [sceneBgColor]);
 
   const handlePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     draggingRef.current = true;
@@ -178,14 +185,26 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
     draggingRef.current = false;
   };
 
+  // Shared booking template variables
+  const cardStyles = isDark 
+    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
+    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#22322F]";
+  
+  const innerContainerStyles = isDark ? "bg-[#162624] border-[#24413D]" : "bg-slate-50 border-slate-100";
+  const labelStyles = isDark ? "text-[#7C948F]" : "text-gray-500";
+  const subtextStyles = isDark ? "text-[#A7BFBA]" : "text-gray-600";
+  const buttonStyles = isDark 
+    ? "bg-[#1A302C]/90 text-[#EAF2F0] border-[#24413D] hover:bg-[#24413D]" 
+    : "bg-white/90 text-slate-700 border-slate-200 hover:bg-white";
+
   return (
-    <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
-      <div className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+    <div className={`rounded-xl border p-4 transition-colors ${cardStyles}`}>
+      <div className={`mb-4 text-center text-xs font-semibold uppercase tracking-[0.24em] ${labelStyles}`}>
         Room preview
       </div>
 
       <div
-        className="relative mx-auto w-full max-w-[320px] touch-none select-none overflow-hidden rounded-[20px] ring-1 ring-slate-200"
+        className={`relative mx-auto w-full max-w-[320px] touch-none select-none overflow-hidden rounded-xl border ${innerContainerStyles}`}
         style={{ height: 260 }}
         role="img"
         aria-label={`3D preview of ${name}`}
@@ -197,7 +216,9 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
         <div ref={hostRef} className="h-full w-full" />
 
         {!ready && (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-sm text-slate-400">
+          <div className={`absolute inset-0 flex items-center justify-center text-sm ${
+            isDark ? "bg-[#162624] text-[#7C948F]" : "bg-slate-100 text-slate-400"
+          }`}>
             Loading room…
           </div>
         )}
@@ -206,7 +227,7 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
 
         {!hasInteracted && ready && (
           <div className="pointer-events-none absolute inset-x-0 top-3 flex justify-center">
-            <span className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200">
+            <span className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium shadow-sm backdrop-blur-sm ${buttonStyles}`}>
               <Move3d className="h-3.5 w-3.5" />
               Drag to look around
             </span>
@@ -217,14 +238,14 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
           type="button"
           onClick={() => resetRef.current()}
           aria-label="Reset view"
-          className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-white"
+          className={`absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium shadow-sm transition-colors backdrop-blur-sm ${buttonStyles}`}
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset
         </button>
       </div>
 
-      <div className="mt-3 text-center text-sm text-slate-500">
+      <div className={`mt-3 text-center text-sm ${subtextStyles}`}>
         Drag inside the room to look around, like a first-person walkthrough.
       </div>
     </div>

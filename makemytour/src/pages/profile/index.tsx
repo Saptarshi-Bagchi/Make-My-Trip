@@ -12,6 +12,7 @@ import {
   LogOut,
   Plane,
   Building2,
+  XCircle,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -25,11 +26,14 @@ import CancelBookingDialog from "@/components/CancelBookingDialog";
 import RefundStatusCard from "@/components/RefundStatusCard";
 import { calculateRefund, calculateHotelRefund, RefundCalculation } from "@/lib/refundPolicy";
 import { addRefundRecord, getAllRefunds, RefundWithStatus } from "@/lib/refundTracker";
-import { XCircle } from "lucide-react";
-const index = () => {
+import { useTheme } from "@/components/ThemeContext";
+
+const ProfilePage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.user);
   const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const logout = () => {
     dispatch(clearUser());
@@ -169,50 +173,68 @@ const index = () => {
     }
   };
 
+  // Harmonized palette configurations matching the booking engine layout
+  const cardStyles = isDark 
+    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
+    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#22322F]";
+
+  const inputStyles = isDark 
+    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4] focus-visible:ring-0" 
+    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A] focus-visible:ring-0";
+
+  const subtextStyles = isDark ? "text-[#A7BFBA]" : "text-gray-600";
+  const labelStyles = isDark ? "text-[#7FA39D]" : "text-[#62807C]";
+
   const renderBookingCard = (booking: any, index: any) => {
     const liveStatus =
       booking.type === "Flight"
         ? trackedFlights.find((f) => f.id === booking.bookingId)
         : null;
 
+    const isFlightDeparted = booking.type === "Flight" && liveStatus?.status === "Departed";
+    const isFlightLanded = booking.type === "Flight" && liveStatus?.status === "Landed";
+    const canCancel = booking.type !== "Flight" || !(isFlightDeparted || isFlightLanded);
+
     return (
       <div
         key={index}
-        className="border border-gray-200 rounded-xl p-4 bg-white hover:shadow-md hover:border-gray-300 transition-all"
+        className={`border rounded-xl p-4 transition-all ${
+          isDark ? "border-[#24413D] bg-[#162624]/40" : "border-slate-100 bg-white shadow-sm hover:shadow-md"
+        }`}
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             {booking?.type === "Flight" ? (
-              <div className="bg-blue-100 p-2 rounded-lg">
-                <Plane className="w-6 h-6 text-blue-600" />
+              <div className={`p-2 rounded-lg ${isDark ? "bg-[#2C504D]/50 text-[#7FD1C4]" : "bg-blue-50 text-blue-600"}`}>
+                <Plane className="w-6 h-6" />
               </div>
             ) : (
-              <div className="bg-green-100 p-2 rounded-lg">
-                <Building2 className="w-6 h-6 text-green-600" />
+              <div className={`p-2 rounded-lg ${isDark ? "bg-[#2C504D]/50 text-emerald-400" : "bg-emerald-50 text-emerald-600"}`}>
+                <Building2 className="w-6 h-6" />
               </div>
             )}
             <div>
-              <h3 className="font-semibold">{booking?.type}</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="font-semibold font-display">{booking?.type}</h3>
+              <p className={`text-sm ${subtextStyles}`}>
                 Booking ID: {booking?.bookingId}
               </p>
               {booking?.type === "Flight" && booking?.seatNumbers && (
-                <p className="text-xs text-blue-600 font-medium mt-0.5">
+                <p className={`text-xs font-medium mt-0.5 ${isDark ? "text-[#7FD1C4]" : "text-blue-600"}`}>
                   Seats: {booking.seatNumbers}
                 </p>
               )}
               {booking?.type === "Hotel" && booking?.roomType && (
-                <p className="text-xs text-blue-600 font-medium mt-0.5">
+                <p className={`text-xs font-medium mt-0.5 ${isDark ? "text-[#7FD1C4]" : "text-emerald-600"}`}>
                   {booking.roomType}
                 </p>
               )}
             </div>
           </div>
           <div className="text-right">
-            <p className="font-semibold">
+            <p className="font-semibold font-display">
               ₹ {booking?.totalPrice.toLocaleString("en-IN")}
             </p>
-            <p className="text-sm text-gray-500">{booking?.type}</p>
+            <p className={`text-sm ${subtextStyles}`}>{booking?.type}</p>
           </div>
         </div>
 
@@ -222,7 +244,7 @@ const index = () => {
           </div>
         )}
 
-        <div className="flex flex-wrap gap-4 text-sm text-gray-600 pt-3 border-t border-gray-100">
+        <div className={`flex flex-wrap gap-4 text-sm pt-3 border-t ${isDark ? "border-[#24413D] text-[#A7BFBA]" : "border-gray-100 text-gray-600"}`}>
           <div className="flex items-center space-x-1">
             <Calendar className="w-4 h-4" />
             <span>{formatDate(booking?.date)}</span>
@@ -237,184 +259,248 @@ const index = () => {
           </div>
         </div>
 
-        <button
-          onClick={() => setCancelTarget(booking)}
-          className="w-full mt-3 flex items-center justify-center gap-1.5 text-sm font-medium text-red-600 hover:text-red-700 border border-red-100 hover:border-red-200 hover:bg-red-50 rounded-lg py-2 transition-colors"
-        >
-          <XCircle className="w-4 h-4" />
-          Cancel Booking
-        </button>
+        {canCancel ? (
+          <button
+            onClick={() => setCancelTarget(booking)}
+            className="w-full mt-3 flex items-center justify-center gap-1.5 text-sm font-medium text-rose-500 hover:text-rose-600 border border-rose-500/10 hover:border-rose-500/20 hover:bg-rose-500/5 rounded-lg py-2 transition-colors"
+          >
+            <XCircle className="w-4 h-4" />
+            Cancel Booking
+          </button>
+        ) : (
+          <div className={`mt-3 rounded-lg border px-3 py-2 text-sm ${
+            isDark ? "border-[#24413D] bg-[#162624] text-[#7C948F]" : "border-slate-200 bg-slate-50 text-slate-500"
+          }`}>
+            {booking.type === "Flight" ? "This flight has already departed, so cancellation is no longer available." : "Cancellation is no longer available for this booking."}
+          </div>
+        )}
       </div>
     );
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-72px)] pt-6 pb-6 px-4 overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1600&q=80")',
-        }}
-      />
-      <div className="absolute inset-0 bg-white/70" />
-      <div className="relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-bold">Profile</h2>
-                  {!isEditing && (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="text-red-600 flex items-center space-x-1 hover:text-red-700"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                      <span>Edit</span>
-                    </button>
-                  )}
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-[#162624] text-[#EAF2F0]" : "bg-[#f4f7fa] text-[#22322F]"}`}>
+      <main className="mx-auto max-w-7xl px-4 py-8 lg:py-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+          
+          {/* Profile Details Card */}
+          <div className="md:col-span-1">
+            <div className={`rounded-xl p-6 border transition-colors ${cardStyles}`}>
+              <div className="flex justify-between items-start mb-5">
+                <div>
+                  <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>
+                    Your Details
+                  </p>
+                  <h2 className="mt-1 text-xl font-bold font-display">Profile</h2>
                 </div>
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className={`flex items-center space-x-1 text-sm font-semibold ${isDark ? "text-[#7FD1C4] hover:text-[#aef3e8]" : "text-[#3E6E6A] hover:text-[#2C504D]"}`}
+                  >
+                    <Edit2 className="w-4 h-4" />
+                    <span>Edit</span>
+                  </button>
+                )}
+              </div>
 
-                {isEditing ? (
-                  <div className="space-y-4">
+              {isEditing ? (
+                <div className="space-y-4">
+                  <div>
+                    <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelStyles}`}>
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      value={userData.firstName}
+                      onChange={(e) => handleEditFormChange("firstName", e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-xl text-sm transition-colors ${inputStyles}`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelStyles}`}>
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      value={userData.lastName}
+                      onChange={(e) => handleEditFormChange("lastName", e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-xl text-sm transition-colors ${inputStyles}`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelStyles}`}>
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={userData.email}
+                      onChange={(e) => handleEditFormChange("email", e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-xl text-sm transition-colors ${inputStyles}`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelStyles}`}>
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={userData.phoneNumber}
+                      onChange={(e) => handleEditFormChange("phoneNumber", e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-xl text-sm transition-colors ${inputStyles}`}
+                    />
+                  </div>
+                  <div className="flex space-x-3 pt-2">
+                    <button
+                      onClick={handleSave}
+                      className={`flex-1 text-white py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center justify-center space-x-2 ${
+                        isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                      }`}
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>Save</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setUserData({ ...editForm });
+                      }}
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-colors flex items-center justify-center space-x-2 ${
+                        isDark 
+                          ? "bg-[#162624] border-[#24413D] text-[#A7BFBA] hover:bg-[#1A302C]" 
+                          : "bg-slate-100 border-transparent text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      <X className="w-4 h-4" />
+                      <span>Cancel</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  <div className="flex items-center space-x-3">
+                    <User className={`w-5 h-5 ${isDark ? "text-[#7FA39D]" : "text-gray-400"}`} />
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        value={userData.firstName}
-                        onChange={(e) => handleEditFormChange("firstName", e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        value={userData.lastName}
-                        onChange={(e) => handleEditFormChange("lastName", e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        value={userData.email}
-                        onChange={(e) => handleEditFormChange("email", e.target.value)}
-
-                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        value={userData.phoneNumber}
-                        onChange={(e) => handleEditFormChange("phoneNumber", e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                      />
-                    </div>
-                    <div className="flex space-x-3">
-                      <button
-                        onClick={handleSave}
-                        className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
-                      >
-                        <Check className="w-4 h-4" />
-                        <span>Save</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setIsEditing(false);
-                          setEditForm({ ...user });
-                        }}
-                        className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
-                      >
-                        <X className="w-4 h-4" />
-                        <span>Cancel</span>
-                      </button>
+                      <p className="font-medium text-sm">
+                        {user?.firstName} {user?.lastName}
+                      </p>
                     </div>
                   </div>
-                ) : (
-                  <div className="space-y-6">
-                    <div className="flex items-center space-x-3">
-                      <User className="w-5 h-5 text-gray-500" />
-                      <div>
-                        <p className="font-medium">
-                          {user?.firstName} {user?.lastName}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Mail className="w-5 h-5 text-gray-500" />
-                      <p>{user?.email}</p>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Phone className="w-5 h-5 text-gray-500" />
-                      <p>{user?.phoneNumber}</p>
-                    </div>
+                  <div className="flex items-center space-x-3">
+                    <Mail className={`w-5 h-5 ${isDark ? "text-[#7FA39D]" : "text-gray-400"}`} />
+                    <p className="text-sm">{user?.email}</p>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Phone className={`w-5 h-5 ${isDark ? "text-[#7FA39D]" : "text-gray-400"}`} />
+                    <p className="text-sm">{user?.phoneNumber}</p>
+                  </div>
+                  
+                  <div className={`border-t pt-4 ${isDark ? "border-[#24413D]" : "border-gray-100"}`}>
                     <button
-                      className="w-full mt-4 flex items-center justify-center space-x-2 text-red-600 hover:text-red-700"
+                      className="w-full flex items-center justify-center space-x-2 text-sm font-medium text-rose-500 hover:text-rose-600 transition-colors"
                       onClick={logout}
                     >
                       <LogOut className="w-4 h-4" />
-                      <span>Logout</span>
+                      <span>Logout Account</span>
                     </button>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
+          </div>
 
-            <div className="md:col-span-2">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <h2 className="text-xl font-bold mb-4">My Bookings</h2>
-
-                <Tabs defaultValue="flights">
-                  <TabsList>
-                    <TabsTrigger value="flights">Flights</TabsTrigger>
-                    <TabsTrigger value="hotels">Hotels</TabsTrigger>
-                    <TabsTrigger value="refunds">Refunds</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="flights">
-                    <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
-                      {flightBookings.map((booking: any, index: any) =>
-                        renderBookingCard(booking, index)
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="hotels">
-                    <div className="space-y-6">
-                      {hotelBookings.map((booking: any, index: any) =>
-                        renderBookingCard(booking, index)
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="refunds">
-                    <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
-                      {refunds.length > 0 ? (
-                        refunds.map((refund) => <RefundStatusCard key={refund.id} refund={refund} />)
-                      ) : (
-                        <p className="text-gray-500 text-sm">No cancellations yet.</p>
-                      )}
-                    </div>
-                  </TabsContent>
-                </Tabs>
+          {/* Bookings & Summary Ledger Panel */}
+          <div className="md:col-span-2">
+            <div className={`rounded-xl p-6 border transition-colors ${cardStyles}`}>
+              <div className="mb-4">
+                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>
+                  Transactions
+                </p>
+                <h2 className="mt-1 text-xl font-bold font-display">My Bookings</h2>
               </div>
+
+              <Tabs defaultValue="flights" className="w-full">
+                <TabsList className={`flex space-x-1 rounded-xl p-1 mb-6 border ${
+                  isDark ? "bg-[#162624] border-[#24413D]" : "bg-slate-100 border-transparent"
+                }`}>
+                  <TabsTrigger 
+                    value="flights"
+                    className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all data-[state=active]:shadow-sm ${
+                      isDark 
+                        ? "data-[state=active]:bg-[#2C504D] data-[state=active]:text-[#EAF2F0] text-[#A7BFBA]" 
+                        : "data-[state=active]:bg-white data-[state=active]:text-[#22322F] text-gray-600"
+                    }`}
+                  >
+                    Flights
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="hotels"
+                    className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all data-[state=active]:shadow-sm ${
+                      isDark 
+                        ? "data-[state=active]:bg-[#2C504D] data-[state=active]:text-[#EAF2F0] text-[#A7BFBA]" 
+                        : "data-[state=active]:bg-white data-[state=active]:text-[#22322F] text-gray-600"
+                    }`}
+                  >
+                    Hotels
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="refunds"
+                    className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all data-[state=active]:shadow-sm ${
+                      isDark 
+                        ? "data-[state=active]:bg-[#2C504D] data-[state=active]:text-[#EAF2F0] text-[#A7BFBA]" 
+                        : "data-[state=active]:bg-white data-[state=active]:text-[#22322F] text-gray-600"
+                    }`}
+                  >
+                    Refunds
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="flights" className="mt-0 focus-visible:outline-none">
+                  <div className="space-y-4 max-h-[440px] overflow-y-auto pr-1 custom-scrollbar">
+                    {flightBookings.length > 0 ? (
+                      flightBookings.map((booking: any, index: any) => renderBookingCard(booking, index))
+                    ) : (
+                      <div className={`rounded-xl border border-dashed p-8 text-center text-xs ${
+                        isDark ? "border-[#24413D] bg-[#162624] text-[#A7BFBA]" : "border-slate-200 bg-slate-50/50 text-slate-500"
+                      }`}>
+                        You do not have any flight bookings yet. Start planning your next journey.
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="hotels" className="mt-0 focus-visible:outline-none">
+                  <div className="space-y-4 max-h-[440px] overflow-y-auto pr-1 custom-scrollbar">
+                    {hotelBookings.length > 0 ? (
+                      hotelBookings.map((booking: any, index: any) => renderBookingCard(booking, index))
+                    ) : (
+                      <div className={`rounded-xl border border-dashed p-8 text-center text-xs ${
+                        isDark ? "border-[#24413D] bg-[#162624] text-[#A7BFBA]" : "border-slate-200 bg-slate-50/50 text-slate-500"
+                      }`}>
+                        You have no hotel bookings right now. Explore stays and create a new reservation.
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="refunds" className="mt-0 focus-visible:outline-none">
+                  <div className="space-y-4 max-h-[440px] overflow-y-auto pr-1 custom-scrollbar">
+                    {refunds.length > 0 ? (
+                      refunds.map((refund) => <RefundStatusCard key={refund.id} refund={refund} />)
+                    ) : (
+                      <div className={`rounded-xl border border-dashed p-8 text-center text-xs ${
+                        isDark ? "border-[#24413D] bg-[#162624] text-[#A7BFBA]" : "border-slate-200 bg-slate-50/50 text-slate-500"
+                      }`}>
+                        No refund activity yet. Cancellations will appear here once they are processed.
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       {cancelTarget && (
         <CancelBookingDialog
@@ -430,4 +516,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default ProfilePage;

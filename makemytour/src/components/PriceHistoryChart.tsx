@@ -1,17 +1,30 @@
 import React, { useState } from "react";
 import { PriceHistoryPoint } from "@/lib/pricingEngine";
+import { useTheme } from "@/components/ThemeContext";
 
 interface PriceHistoryChartProps {
     history: PriceHistoryPoint[];
     width?: number;
     height?: number;
+    forcedTheme?: "light" | "dark"; // Allows parent component to directly pass the active theme
 }
 
-const PriceHistoryChart = ({ history, width = 320, height = 140 }: PriceHistoryChartProps) => {
+const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: PriceHistoryChartProps) => {
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+    
+    // Fallback to hook if no theme is passed down explicitly by props
+    const contextTheme = useTheme();
+    const activeTheme = forcedTheme || contextTheme?.theme || "light";
+    const isDark = activeTheme === "dark";
 
     if (history.length === 0) {
-        return <p className="text-sm text-gray-500">No price history available.</p>;
+        return (
+            <div className={`p-4 rounded-xl border transition-all duration-300 ${
+                isDark ? "bg-[#1A302C] border-[#24413D] text-[#7C948F]" : "bg-white border-[#E3ECE9] text-gray-500"
+            }`}>
+                <p className="text-sm">No price history available.</p>
+            </div>
+        );
     }
 
     const padding = { top: 12, right: 12, bottom: 24, left: 44 };
@@ -35,33 +48,42 @@ const PriceHistoryChart = ({ history, width = 320, height = 140 }: PriceHistoryC
     const formatShortDate = (iso: string) =>
         new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 
+    // Thematic configurations mapping to your theme styles
+    const axisColor = isDark ? "#24413D" : "#E3ECE9";
+    const textPrimaryColor = isDark ? "#A7BFBA" : "#62807C";
+    const textSecondaryColor = isDark ? "#7C948F" : "#7C948F";
+    const chartColor = isDark ? "#7FD1C4" : "#3E6E6A";
+    const dotBorderColor = isDark ? "#1A302C" : "#ffffff";
+
     return (
-        <div className="relative">
+        <div className={`relative p-4 rounded-xl border transition-all duration-300 ${
+            isDark ? "bg-[#1A302C] border-[#24413D]" : "bg-white border-[#E3ECE9]"
+        }`}>
             <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
                 <line
                     x1={padding.left}
                     y1={padding.top}
                     x2={padding.left}
                     y2={padding.top + chartHeight}
-                    stroke="#e5e7eb"
+                    stroke={axisColor}
                 />
                 <line
                     x1={padding.left}
                     y1={padding.top + chartHeight}
                     x2={padding.left + chartWidth}
                     y2={padding.top + chartHeight}
-                    stroke="#e5e7eb"
+                    stroke={axisColor}
                 />
 
-                <text x={padding.left - 8} y={yFor(maxPrice) + 4} textAnchor="end" fontSize="10" fill="#6b7280">
+                <text x={padding.left - 8} y={yFor(maxPrice) + 4} textAnchor="end" fontSize="10" fill={textPrimaryColor}>
                     ₹{maxPrice.toLocaleString("en-IN")}
                 </text>
-                <text x={padding.left - 8} y={yFor(minPrice) + 4} textAnchor="end" fontSize="10" fill="#6b7280">
+                <text x={padding.left - 8} y={yFor(minPrice) + 4} textAnchor="end" fontSize="10" fill={textPrimaryColor}>
                     ₹{minPrice.toLocaleString("en-IN")}
                 </text>
 
-                <polygon points={areaPoints} fill="#3b82f6" fillOpacity="0.08" />
-                <polyline points={linePoints} fill="none" stroke="#3b82f6" strokeWidth="2" />
+                <polygon points={areaPoints} fill={chartColor} fillOpacity={isDark ? "0.06" : "0.09"} />
+                <polyline points={linePoints} fill="none" stroke={chartColor} strokeWidth="2" />
 
                 {history.map((p, i) => (
                     <circle
@@ -69,8 +91,8 @@ const PriceHistoryChart = ({ history, width = 320, height = 140 }: PriceHistoryC
                         cx={xFor(i)}
                         cy={yFor(p.price)}
                         r={hoverIndex === i ? 5 : 3}
-                        fill="#3b82f6"
-                        stroke="#fff"
+                        fill={chartColor}
+                        stroke={dotBorderColor}
                         strokeWidth="1.5"
                         onMouseEnter={() => setHoverIndex(i)}
                         onMouseLeave={() => setHoverIndex(null)}
@@ -78,17 +100,21 @@ const PriceHistoryChart = ({ history, width = 320, height = 140 }: PriceHistoryC
                     />
                 ))}
 
-                <text x={padding.left} y={height - 6} fontSize="10" fill="#9ca3af">
+                <text x={padding.left} y={height - 6} fontSize="10" fill={textSecondaryColor}>
                     {formatShortDate(history[0].date)}
                 </text>
-                <text x={padding.left + chartWidth} y={height - 6} textAnchor="end" fontSize="10" fill="#9ca3af">
+                <text x={padding.left + chartWidth} y={height - 6} textAnchor="end" fontSize="10" fill={textSecondaryColor}>
                     {formatShortDate(history[history.length - 1].date)}
                 </text>
             </svg>
 
             {hoverIndex !== null && (
                 <div
-                    className="absolute bg-gray-900 text-white text-xs px-2 py-1 rounded shadow pointer-events-none"
+                    className={`absolute text-xs px-2 py-1 rounded shadow-md pointer-events-none transition-all duration-300 border ${
+                        isDark 
+                          ? "bg-[#162624] text-[#EAF2F0] border-[#24413D]" 
+                          : "bg-white text-[#1F3330] border-[#E3ECE9]"
+                    }`}
                     style={{
                         left: `${(xFor(hoverIndex) / width) * 100}%`,
                         top: `${(yFor(history[hoverIndex].price) / height) * 100}%`,

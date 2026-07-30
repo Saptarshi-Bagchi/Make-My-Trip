@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import { useEffect } from "react";
 import Footer from "@/components/Fotter";
 import { FlightTrackingProvider } from "@/lib/flightTrackingContext";
+import { ThemeProvider } from "@/components/ThemeContext";
 
 const Myapp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
@@ -28,10 +29,12 @@ const Myapp = ({ Component, pageProps }: AppProps) => {
 export default function App(props: AppProps) {
   return (
     <Provider store={store}>
-      <Head>
-        <title>MakeMyTour</title>
-      </Head>
-      <Myapp {...props} />
+      <ThemeProvider>
+        <Head>
+          <title>MakeMyTour</title>
+        </Head>
+        <Myapp {...props} />
+      </ThemeProvider>
     </Provider>
   );
 }
