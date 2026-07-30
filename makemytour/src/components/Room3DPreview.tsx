@@ -187,14 +187,14 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
 
   // Shared booking template variables
   const cardStyles = isDark 
-    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
-    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#22322F]";
+    ? "bg-[#121826] border-[#2A3854] text-[#F1F5F9]" 
+    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#0F172A]";
   
-  const innerContainerStyles = isDark ? "bg-[#162624] border-[#24413D]" : "bg-slate-50 border-slate-100";
-  const labelStyles = isDark ? "text-[#7C948F]" : "text-gray-500";
-  const subtextStyles = isDark ? "text-[#A7BFBA]" : "text-gray-600";
+  const innerContainerStyles = isDark ? "bg-[#1A2234] border-[#2A3854]" : "bg-slate-50 border-slate-100";
+  const labelStyles = isDark ? "text-[#94A3B8]" : "text-gray-500";
+  const subtextStyles = isDark ? "text-[#94A3B8]" : "text-gray-600";
   const buttonStyles = isDark 
-    ? "bg-[#1A302C]/90 text-[#EAF2F0] border-[#24413D] hover:bg-[#24413D]" 
+    ? "bg-[#121826]/90 text-[#F1F5F9] border-[#2A3854] hover:bg-[#2A3854]" 
     : "bg-white/90 text-slate-700 border-slate-200 hover:bg-white";
 
   return (
@@ -217,9 +217,9 @@ const Room3DPreview = ({ name }: Room3DPreviewProps) => {
 
         {!ready && (
           <div className={`absolute inset-0 flex items-center justify-center text-sm ${
-            isDark ? "bg-[#162624] text-[#7C948F]" : "bg-slate-100 text-slate-400"
+            isDark ? "bg-[#1A2234] text-[#94A3B8]" : "bg-slate-100 text-slate-400"
           }`}>
-            Loading room…
+            Loading roomâ€¦
           </div>
         )}
 

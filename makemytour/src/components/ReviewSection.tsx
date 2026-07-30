@@ -158,7 +158,7 @@ export default function ReviewSection({
         className={`h-4 w-4 ${
           index < rating 
             ? "fill-amber-400 text-amber-400" 
-            : isDark ? "text-[#24413D]" : "text-slate-200"
+            : isDark ? "text-[#2A3854]" : "text-slate-200"
         }`}
       />
     ));
@@ -166,21 +166,21 @@ export default function ReviewSection({
 
   // Shared booking theme tokens
   const cardStyles = isDark 
-    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
-    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#22322F]";
+    ? "bg-[#121826] border-[#2A3854] text-[#F1F5F9]" 
+    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#0F172A]";
 
   const inputStyles = isDark 
-    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4] focus-visible:ring-0 focus-visible:ring-offset-0" 
-    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A] focus-visible:ring-0 focus-visible:ring-offset-0";
+    ? "bg-[#1A2234] border-[#2A3854] text-[#F1F5F9] focus:border-[#818CF8] focus-visible:ring-0 focus-visible:ring-offset-0" 
+    : "bg-white border-[#E2E8F0] text-[#0F172A] focus:border-[#4F46E5] focus-visible:ring-0 focus-visible:ring-offset-0";
 
-  const subtextStyles = isDark ? "text-[#A7BFBA]" : "text-gray-600";
-  const labelStyles = isDark ? "text-[#7FA39D]" : "text-[#62807C]";
+  const subtextStyles = isDark ? "text-[#94A3B8]" : "text-gray-600";
+  const labelStyles = isDark ? "text-[#94A3B8]" : "text-[#64748B]";
 
   return (
     <section className={`rounded-xl p-6 border transition-colors ${cardStyles}`}>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
-          <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>
+          <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-[#94A3B8]" : "text-gray-500"}`}>
             {title}
           </p>
           <h2 className="mt-1 text-2xl font-bold font-display">
@@ -189,12 +189,12 @@ export default function ReviewSection({
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
           <div className={`rounded-full px-3 py-1.5 shadow-sm border ${
-            isDark ? "bg-[#162624] border-[#24413D] text-[#A7BFBA]" : "bg-slate-50 border-slate-200 text-slate-600"
+            isDark ? "bg-[#1A2234] border-[#2A3854] text-[#94A3B8]" : "bg-slate-50 border-slate-200 text-slate-600"
           }`}>
-            <span className={`font-semibold ${isDark ? "text-[#EAF2F0]" : "text-slate-900"}`}>{averageRating.toFixed(1)}</span> / 5 · {reviewCount} reviews
+            <span className={`font-semibold ${isDark ? "text-[#F1F5F9]" : "text-slate-900"}`}>{averageRating.toFixed(1)}</span> / 5 Â· {reviewCount} reviews
           </div>
           <div className={`rounded-full px-3 py-1.5 shadow-sm border ${
-            isDark ? "bg-[#162624] border-[#24413D] text-[#A7BFBA]" : "bg-slate-50 border-slate-200 text-slate-600"
+            isDark ? "bg-[#1A2234] border-[#2A3854] text-[#94A3B8]" : "bg-slate-50 border-slate-200 text-slate-600"
           }`}>
             {reviewCount > 0 ? `${Math.round(averageRating * 20)}% positive` : "No reviews yet"}
           </div>
@@ -205,7 +205,7 @@ export default function ReviewSection({
         {/* Left Column Section: Feed */}
         <div className="flex flex-col h-full min-h-0">
           <div className={`rounded-xl border p-4 shadow-sm mb-3 ${
-            isDark ? "bg-[#162624] border-[#24413D]" : "bg-slate-50 border-slate-100"
+            isDark ? "bg-[#1A2234] border-[#2A3854]" : "bg-slate-50 border-slate-100"
           }`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -224,10 +224,10 @@ export default function ReviewSection({
                     className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                       sortOption === option.value
                         ? isDark 
-                          ? "bg-[#2C504D] text-[#EAF2F0] shadow-sm" 
-                          : "bg-[#3E6E6A] text-white shadow-sm"
+                          ? "bg-[#4338CA] text-[#F1F5F9] shadow-sm" 
+                          : "bg-[#4F46E5] text-white shadow-sm"
                         : isDark 
-                          ? "bg-[#1A302C] text-[#A7BFBA] hover:bg-[#24413D]" 
+                          ? "bg-[#121826] text-[#94A3B8] hover:bg-[#2A3854]" 
                           : "bg-slate-200/60 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -241,20 +241,20 @@ export default function ReviewSection({
           <div className="flex-1 overflow-y-auto pr-1 space-y-3 custom-scrollbar">
             {sortedReviews.length === 0 ? (
               <div className={`rounded-xl border border-dashed p-8 text-center text-xs ${
-                isDark ? "border-[#24413D] bg-[#162624] text-[#A7BFBA]" : "border-slate-200 bg-slate-50/50 text-slate-500"
+                isDark ? "border-[#2A3854] bg-[#1A2234] text-[#94A3B8]" : "border-slate-200 bg-slate-50/50 text-slate-500"
               }`}>
                 No reviews yet. Share your experience to help fellow travelers.
               </div>
             ) : (
               sortedReviews.map((review) => (
                 <article key={review.id} className={`rounded-xl border p-4 shadow-sm transition-colors ${
-                  isDark ? "border-[#24413D] bg-[#162624]/40" : "border-slate-100 bg-white"
+                  isDark ? "border-[#2A3854] bg-[#1A2234]/40" : "border-slate-100 bg-white"
                 }`}>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <div className={`flex flex-wrap items-center gap-2 text-xs ${subtextStyles}`}>
-                        <span className={`font-semibold ${isDark ? "text-[#EAF2F0]" : "text-slate-900"}`}>{review.username}</span>
-                        <span>•</span>
+                        <span className={`font-semibold ${isDark ? "text-[#F1F5F9]" : "text-slate-900"}`}>{review.username}</span>
+                        <span>â€¢</span>
                         <span>{formatDate(review.createdAt)}</span>
                       </div>
                       <div className="mt-1 flex items-center gap-0.5">{generateStars(review.rating)}</div>
@@ -270,7 +270,7 @@ export default function ReviewSection({
                   </div>
 
                   <p className={`mt-2.5 text-xs leading-relaxed whitespace-pre-line overflow-hidden text-ellipsis ${
-                    isDark ? "text-[#EAF2F0]/90" : "text-slate-700"
+                    isDark ? "text-[#F1F5F9]/90" : "text-slate-700"
                   }`}>
                     {review.text}
                   </p>
@@ -283,7 +283,7 @@ export default function ReviewSection({
                           src={image}
                           alt={`Review visual ${index + 1}`}
                           className={`h-20 w-full rounded-xl object-cover border ${
-                            isDark ? "border-[#24413D]" : "border-slate-100"
+                            isDark ? "border-[#2A3854]" : "border-slate-100"
                           }`}
                         />
                       ))}
@@ -295,7 +295,7 @@ export default function ReviewSection({
                       type="button"
                       onClick={() => setReplyOpen(replyOpen === review.id ? null : review.id)}
                       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 transition-colors ${
-                        isDark ? "bg-[#1A302C] text-[#A7BFBA] hover:bg-[#24413D]" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        isDark ? "bg-[#121826] text-[#94A3B8] hover:bg-[#2A3854]" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                       }`}
                     >
                       <MessageCircle className="h-3 w-3" /> Reply
@@ -305,7 +305,7 @@ export default function ReviewSection({
                       onClick={() => onFlagReview(review.id)}
                       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 border transition-colors ${
                         isDark 
-                          ? "bg-[#162624] border-[#24413D] text-[#A7BFBA] hover:bg-[#1A302C]" 
+                          ? "bg-[#1A2234] border-[#2A3854] text-[#94A3B8] hover:bg-[#121826]" 
                           : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                       }`}
                     >
@@ -314,24 +314,24 @@ export default function ReviewSection({
                   </div>
 
                   {review.replies?.length ? (
-                    <div className={`mt-3 space-y-2 border-t pt-3 ${isDark ? "border-[#24413D]" : "border-slate-150"}`}>
+                    <div className={`mt-3 space-y-2 border-t pt-3 ${isDark ? "border-[#2A3854]" : "border-slate-150"}`}>
                       {review.replies.map((reply) => (
                         <div key={reply.id} className={`rounded-xl p-2.5 text-[11px] ${
-                          isDark ? "bg-[#162624]" : "bg-slate-50"
+                          isDark ? "bg-[#1A2234]" : "bg-slate-50"
                         }`}>
                           <div className={`flex flex-wrap items-center gap-1.5 ${subtextStyles}`}>
-                            <span className={`font-semibold ${isDark ? "text-[#EAF2F0]" : "text-slate-900"}`}>{reply.username}</span>
-                            <span>•</span>
+                            <span className={`font-semibold ${isDark ? "text-[#F1F5F9]" : "text-slate-900"}`}>{reply.username}</span>
+                            <span>â€¢</span>
                             <span>{formatDate(reply.createdAt)}</span>
                           </div>
-                          <p className={`mt-0.5 leading-relaxed ${isDark ? "text-[#EAF2F0]/80" : "text-slate-600"}`}>{reply.text}</p>
+                          <p className={`mt-0.5 leading-relaxed ${isDark ? "text-[#F1F5F9]/80" : "text-slate-600"}`}>{reply.text}</p>
                         </div>
                       ))}
                     </div>
                   ) : null}
 
                   {replyOpen === review.id && currentUser ? (
-                    <div className={`mt-3 space-y-2 rounded-xl p-3 ${isDark ? "bg-[#162624]" : "bg-slate-50"}`}>
+                    <div className={`mt-3 space-y-2 rounded-xl p-3 ${isDark ? "bg-[#1A2234]" : "bg-slate-50"}`}>
                       <Label className={`text-[11px] font-semibold ${labelStyles}`} htmlFor={`reply-${review.id}`}>
                         Write a reply
                       </Label>
@@ -350,7 +350,7 @@ export default function ReviewSection({
                         onClick={() => submitReply(review.id)} 
                         disabled={submitting || !(replyDraft[review.id]?.trim())}
                         className={`h-7 text-[11px] text-white shadow-sm ${
-                          isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                          isDark ? "bg-[#4338CA] hover:bg-[#4F46E5]" : "bg-[#4F46E5] hover:bg-[#4338CA]"
                         }`}
                       >
                         Post Reply
@@ -365,10 +365,10 @@ export default function ReviewSection({
 
         {/* Right Side Form Panel */}
         <aside className={`flex flex-col h-full rounded-xl border p-5 shadow-sm min-h-0 ${
-          isDark ? "bg-[#162624] border-[#24413D]" : "bg-slate-50 border-slate-200"
+          isDark ? "bg-[#1A2234] border-[#2A3854]" : "bg-slate-50 border-slate-200"
         }`}>
           <div className="mb-4 flex items-center gap-2">
-            <div className={`rounded-xl p-2 ${isDark ? "bg-[#1A302C] text-[#7FD1C4]" : "bg-white text-[#3E6E6A] shadow-sm"}`}>
+            <div className={`rounded-xl p-2 ${isDark ? "bg-[#121826] text-[#818CF8]" : "bg-white text-[#4F46E5] shadow-sm"}`}>
               <ImagePlus className="h-4 w-4" />
             </div>
             <div>
@@ -386,7 +386,7 @@ export default function ReviewSection({
                   <span className="text-rose-500 text-[10px]">*</span>
                 </div>
                 <div className={`flex gap-0.5 rounded-xl border p-2 w-max shadow-inner ${
-                  isDark ? "bg-[#162624] border-[#24413D]" : "bg-white border-slate-200"
+                  isDark ? "bg-[#1A2234] border-[#2A3854]" : "bg-white border-slate-200"
                 }`}>
                   {[1, 2, 3, 4, 5].map((value) => (
                     <button
@@ -394,14 +394,14 @@ export default function ReviewSection({
                       type="button"
                       onClick={() => setRating(value)}
                       className={`rounded-lg p-1 transition-all active:scale-95 ${
-                        isDark ? "hover:bg-[#1A302C]" : "hover:bg-slate-50"
+                        isDark ? "hover:bg-[#121826]" : "hover:bg-slate-50"
                       }`}
                       aria-label={`${value} star rating`}
                     >
                       <Star className={`h-4 w-4 transition ${
                         value <= rating 
                           ? "fill-amber-400 text-amber-400" 
-                          : isDark ? "text-[#24413D]" : "text-slate-200"
+                          : isDark ? "text-[#2A3854]" : "text-slate-200"
                       }`} />
                     </button>
                   ))}
@@ -429,19 +429,19 @@ export default function ReviewSection({
                   Add Photos
                 </Label>
                 <div className={`flex items-center justify-between rounded-xl border border-dashed p-3 ${
-                  isDark ? "border-[#24413D] bg-[#162624]" : "border-slate-300 bg-white"
+                  isDark ? "border-[#2A3854] bg-[#1A2234]" : "border-slate-300 bg-white"
                 }`}>
                   <label
                     htmlFor="review-images"
                     className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all cursor-pointer active:scale-95 ${
-                      isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                      isDark ? "bg-[#4338CA] hover:bg-[#4F46E5]" : "bg-[#4F46E5] hover:bg-[#4338CA]"
                     }`}
                   >
                     <ImagePlus className="h-3.5 w-3.5" />
                     Browse Photos
                   </label>
                   <span className={`text-[11px] font-medium border px-2 py-0.5 rounded-md ${
-                    isDark ? "bg-[#162624] border-[#24413D] text-[#A7BFBA]" : "bg-slate-50 border-slate-200 text-slate-600"
+                    isDark ? "bg-[#1A2234] border-[#2A3854] text-[#94A3B8]" : "bg-slate-50 border-slate-200 text-slate-600"
                   }`}>
                     {imageFiles.length} / 5 loaded
                   </span>
@@ -460,14 +460,14 @@ export default function ReviewSection({
                   <div className="grid gap-2 grid-cols-3 pt-1">
                     {imagePreviews.map((preview, index) => (
                       <div key={preview} className={`group relative overflow-hidden rounded-xl border shadow-sm h-16 ${
-                        isDark ? "border-[#24413D]" : "border-slate-200"
+                        isDark ? "border-[#2A3854]" : "border-slate-200"
                       }`}>
                         <img src={preview} alt={`Preview index ${index + 1}`} className="h-full w-full object-cover" />
                         <button
                           type="button"
                           onClick={() => removeImage(index)}
                           className={`absolute right-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-md text-muted-foreground opacity-90 transition shadow ${
-                            isDark ? "bg-[#162624] hover:bg-[#1A302C] text-[#A7BFBA]" : "bg-white hover:bg-slate-50 text-slate-600"
+                            isDark ? "bg-[#1A2234] hover:bg-[#121826] text-[#94A3B8]" : "bg-white hover:bg-slate-50 text-slate-600"
                           }`}
                           aria-label="Remove image"
                         >
@@ -481,12 +481,12 @@ export default function ReviewSection({
             </div>
 
             {/* Bottom Form Action Buttons */}
-            <div className={`pt-2 border-t ${isDark ? "border-[#24413D]" : "border-slate-200"}`}>
+            <div className={`pt-2 border-t ${isDark ? "border-[#2A3854]" : "border-slate-200"}`}>
               <Button 
                 type="submit" 
                 disabled={!currentUser || submitting || !comment.trim() || rating === 0}
                 className={`w-full h-9 text-xs font-semibold rounded-xl text-white shadow-sm ${
-                  isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                  isDark ? "bg-[#4338CA] hover:bg-[#4F46E5]" : "bg-[#4F46E5] hover:bg-[#4338CA]"
                 }`}
               >
                 {currentUser ? "Publish Review Content" : "Sign In To Review"}

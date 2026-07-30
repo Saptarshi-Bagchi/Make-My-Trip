@@ -167,7 +167,7 @@ const BookFlightPage = () => {
     return <Loader />;
   }
   if (flights.length === 0) {
-    return <div className={`p-8 text-center ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>No flight data available for this ID.</div>;
+    return <div className={`p-8 text-center ${isDark ? "text-slate-300" : "text-slate-700"}`}>No flight data available for this ID.</div>;
   }
 
   const flightDetails = {
@@ -249,7 +249,6 @@ const BookFlightPage = () => {
     setQuantity(isNaN(value) ? 1 : Math.max(1, Math.min(value, flight.availableSeats)));
   };
 
-  // Fixed Calculations Decoupling Seat Surcharges from Pure Base Fare
   const baseFlightFare = liveFlightPrice * quantity;
   const totalTaxes = fareSummary?.taxes * quantity;
   const totalOtherServices = fareSummary?.otherServices * quantity;
@@ -288,24 +287,24 @@ const BookFlightPage = () => {
   };
 
   const cardStyles = isDark 
-    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
-    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#22322F]";
+    ? "bg-[#121827] border-[#222F43] text-slate-100" 
+    : "bg-white border-slate-200 shadow-sm text-slate-900";
 
   const inputStyles = isDark 
-    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4]" 
-    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]";
+    ? "bg-[#1A2234] border-[#222F43] text-slate-100 focus:border-indigo-500" 
+    : "bg-slate-50 border-slate-200 text-slate-900 focus:border-indigo-600";
 
-  const labelStyles = isDark ? "text-[#7FA39D]" : "text-[#62807C]";
+  const labelStyles = isDark ? "text-slate-300" : "text-slate-600";
 
   const tabTriggerStyles = (isActive: boolean) => {
     if (isDark) {
-      return isActive ? "text-[#7FD1C4] bg-[#162624]" : "text-[#7C948F] hover:text-[#7FD1C4]";
+      return isActive ? "text-indigo-400 bg-[#1A2234]" : "text-slate-400 hover:text-indigo-300";
     }
-    return isActive ? "text-[#3E6E6A] bg-[#EAF2F0]" : "text-[#7C948F] hover:text-[#3E6E6A]";
+    return isActive ? "text-indigo-600 bg-white shadow-sm" : "text-slate-600 hover:text-indigo-600";
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-[#162624] text-[#EAF2F0]" : "bg-[#f4f7fa] text-[#22322F]"}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-[#0A0D14] text-slate-100" : "bg-slate-50/70 text-slate-900"}`}>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
@@ -317,14 +316,14 @@ const BookFlightPage = () => {
                   <div className="flex items-center flex-wrap gap-4 mb-2">
                     <h2 className="text-lg font-bold flex items-center font-display">
                       <span>{flight?.from}</span>
-                      <ArrowRight className={`w-5 h-5 mx-2 ${isDark ? "text-[#7FD1C4]" : "text-[#3E6E6A]"}`} />
+                      <ArrowRight className={`w-5 h-5 mx-2 ${isDark ? "text-indigo-400" : "text-indigo-600"}`} />
                       <span>{flight?.to}</span>
                     </h2>
-                    <span className={`text-xs px-3 py-1 rounded-full font-medium ${isDark ? "bg-red-950/50 text-red-400" : "bg-red-100 text-red-600"}`}>
+                    <span className={`text-xs px-3 py-1 rounded-full font-medium ${isDark ? "bg-rose-950/60 text-rose-400 border border-rose-900/50" : "bg-rose-50 text-rose-600 border border-rose-200"}`}>
                       CANCELLATION FEES APPLY
                     </span>
                   </div>
-                  <div className={`flex items-center text-sm ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`}>
+                  <div className={`flex items-center text-sm ${isDark ? "text-slate-400" : "text-slate-500"}`}>
                     <Calendar className="w-4 h-4 mr-2" />
                     <span>{formatDate(flight.departureTime)}</span>
                     <span className="mx-2">•</span>
@@ -332,63 +331,63 @@ const BookFlightPage = () => {
                     <span>Non Stop - {flightDetails.duration}</span>
                   </div>
                 </div>
-                <button className={`text-sm font-medium flex items-center ${isDark ? "text-[#7FD1C4] hover:text-[#aef3e8]" : "text-blue-600 hover:text-blue-700"}`}>
+                <button className={`text-sm font-medium flex items-center ${isDark ? "text-indigo-400 hover:text-indigo-300" : "text-indigo-600 hover:text-indigo-700"}`}>
                   <Info className="w-4 h-4 mr-1" />
                   View Fare Rules
                 </button>
               </div>
 
-              <div className={`flex items-center space-x-4 mb-6 p-4 rounded-xl ${isDark ? "bg-[#162624]" : "bg-blue-50/50"}`}>
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isDark ? "bg-[#24413D]" : "bg-blue-100"}`}>
-                  <Plane className={`w-6 h-6 ${isDark ? "text-[#7FD1C4]" : "text-blue-600"}`} />
+              <div className={`flex items-center space-x-4 mb-6 p-4 rounded-xl border ${isDark ? "bg-[#1A2234] border-[#222F43]" : "bg-indigo-50/50 border-indigo-100"}`}>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isDark ? "bg-[#222F43]" : "bg-indigo-100"}`}>
+                  <Plane className={`w-6 h-6 ${isDark ? "text-indigo-400" : "text-indigo-600"}`} />
                 </div>
                 <div>
                   <div className="font-semibold font-display">{flight.flightName}</div>
-                  <div className={`text-sm ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`}>
+                  <div className={`text-sm ${isDark ? "text-slate-400" : "text-slate-500"}`}>
                     {flightDetails.flightNo} • {flightDetails.aircraft}
                   </div>
                 </div>
                 <div className="ml-auto text-sm">
-                  <span className={`px-3 py-1 rounded-full ${isDark ? "bg-[#24413D] text-[#7FD1C4]" : "bg-blue-50 text-blue-600"}`}>
+                  <span className={`px-3 py-1 rounded-full font-medium ${isDark ? "bg-[#222F43] text-indigo-400" : "bg-indigo-100 text-indigo-700"}`}>
                     Economy
                   </span>
-                  <span className={`ml-2 ${isDark ? "text-[#7C948F]" : "text-gray-600"}`}>MMTSPECIAL</span>
+                  <span className={`ml-2 ${isDark ? "text-slate-400" : "text-slate-500"}`}>MMTSPECIAL</span>
                 </div>
               </div>
 
-              <div className={`flex flex-wrap md:flex-nowrap justify-between items-start gap-6 border-t pt-6 ${isDark ? "border-[#24413D]" : "border-gray-100"}`}>
+              <div className={`flex flex-wrap md:flex-nowrap justify-between items-start gap-6 border-t pt-6 ${isDark ? "border-[#222F43]" : "border-slate-200"}`}>
                 <div>
                   <div className="text-2xl font-bold font-display">{formatDate(flight.departureTime)}</div>
-                  <div className={`text-sm mt-1 flex items-start ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`}>
-                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0 mt-0.5" />
+                  <div className={`text-sm mt-1 flex items-start ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0 mt-0.5 text-indigo-500" />
                     {flight.from} International Airport, Terminal T2
                   </div>
                 </div>
                 <div className="text-center flex-shrink-0">
-                  <div className={`text-sm mb-1 ${isDark ? "text-[#7C948F]" : "text-gray-600"}`}>{flightDetails.duration}</div>
-                  <div className={`w-32 h-0.5 relative my-2 ${isDark ? "bg-[#24413D]" : "bg-gray-300"}`}>
-                    <div className={`absolute -top-2 right-0 w-4 h-4 rounded-full flex items-center justify-center ${isDark ? "bg-[#24413D]" : "bg-gray-300"}`}>
-                      <Plane className={`w-3 h-3 ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`} />
+                  <div className={`text-sm mb-1 ${isDark ? "text-slate-400" : "text-slate-500"}`}>{flightDetails.duration}</div>
+                  <div className={`w-32 h-0.5 relative my-2 ${isDark ? "bg-[#222F43]" : "bg-slate-300"}`}>
+                    <div className={`absolute -top-2 right-0 w-4 h-4 rounded-full flex items-center justify-center ${isDark ? "bg-[#222F43]" : "bg-slate-300"}`}>
+                      <Plane className={`w-3 h-3 ${isDark ? "text-slate-300" : "text-slate-600"}`} />
                     </div>
                   </div>
-                  <div className={`text-xs ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>Non-stop</div>
+                  <div className={`text-xs ${isDark ? "text-slate-500" : "text-slate-400"}`}>Non-stop</div>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold font-display">{formatDate(flight.arrivalTime)}</div>
-                  <div className={`text-sm mt-1 flex items-start justify-end ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`}>
-                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0 mt-0.5" />
+                  <div className={`text-sm mt-1 flex items-start justify-end ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0 mt-0.5 text-indigo-500" />
                     {flight.to} International Airport, Terminal T3
                   </div>
                 </div>
               </div>
 
-              <div className={`flex flex-wrap gap-6 mt-6 text-sm border-t pt-4 ${isDark ? "border-[#24413D] text-[#A7BFBA]" : "border-gray-100 text-gray-600"}`}>
+              <div className={`flex flex-wrap gap-6 mt-6 text-sm border-t pt-4 ${isDark ? "border-[#222F43] text-slate-400" : "border-slate-200 text-slate-600"}`}>
                 <div className="flex items-center">
-                  <Luggage className="w-5 h-5 mr-2" />
+                  <Luggage className="w-5 h-5 mr-2 text-indigo-500" />
                   <span>Cabin Baggage: {flightDetails.cabinBaggage}</span>
                 </div>
                 <div className="flex items-center">
-                  <Luggage className="w-5 h-5 mr-2" />
+                  <Luggage className="w-5 h-5 mr-2 text-indigo-500" />
                   <span>Check-in Baggage: {flightDetails.checkInBaggage}</span>
                 </div>
               </div>
@@ -398,25 +397,25 @@ const BookFlightPage = () => {
             <div className={`rounded-xl p-6 border transition-colors ${cardStyles}`}>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-bold flex items-center font-display">
-                  <AlertCircle className="w-5 h-5 mr-2 text-orange-500" />
+                  <AlertCircle className="w-5 h-5 mr-2 text-amber-500" />
                   Cancellation & Date Change Policy
                 </h2>
-                <button className={`text-sm font-medium ${isDark ? "text-[#7FD1C4] hover:text-[#aef3e8]" : "text-blue-600 hover:text-blue-700"}`}>
+                <button className={`text-sm font-medium ${isDark ? "text-indigo-400 hover:text-indigo-300" : "text-indigo-600 hover:text-indigo-700"}`}>
                   View Policy
                 </button>
               </div>
-              <div className={`p-6 rounded-xl ${isDark ? "bg-[#162624]" : "bg-gray-50"}`}>
+              <div className={`p-6 rounded-xl border ${isDark ? "bg-[#1A2234] border-[#222F43]" : "bg-slate-50 border-slate-200"}`}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDark ? "bg-[#24413D]" : "bg-blue-100"}`}>
-                      <Plane className={`w-5 h-5 ${isDark ? "text-[#7FD1C4]" : "text-blue-600"}`} />
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDark ? "bg-[#222F43]" : "bg-indigo-100"}`}>
+                      <Plane className={`w-5 h-5 ${isDark ? "text-indigo-400" : "text-indigo-600"}`} />
                     </div>
                     <span className="font-semibold font-display">BLR-DEL</span>
                   </div>
                   <div className="font-bold text-lg font-display">₹ 4,300</div>
                 </div>
-                <div className="h-2.5 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-full"></div>
-                <div className={`flex justify-between mt-2 text-xs ${isDark ? "text-[#7C948F]" : "text-gray-600"}`}>
+                <div className="h-2.5 bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500 rounded-full"></div>
+                <div className={`flex justify-between mt-2 text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}>
                   <span>Now</span>
                   <span>16 Jan, 15:55</span>
                   <span>16 Jan, 17:55</span>
@@ -428,10 +427,10 @@ const BookFlightPage = () => {
             <div className={`rounded-xl p-6 border transition-colors ${cardStyles}`}>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-bold flex items-center font-display">
-                  <Gift className="w-5 h-5 mr-2 text-red-500" />
+                  <Gift className="w-5 h-5 mr-2 text-indigo-500" />
                   Book a Flight & unlock these offers
                 </h2>
-                <span className={`text-xs px-3 py-1 rounded-full font-medium ${isDark ? "bg-red-950/60 text-red-400" : "bg-red-100 text-red-600"}`}>
+                <span className={`text-xs px-3 py-1 rounded-full font-medium ${isDark ? "bg-indigo-950/60 text-indigo-300 border border-indigo-800/50" : "bg-indigo-50 text-indigo-700 border border-indigo-200"}`}>
                   Flyer Exclusive Deal
                 </span>
               </div>
@@ -440,29 +439,29 @@ const BookFlightPage = () => {
                   <div
                     key={index}
                     className={`border rounded-xl overflow-hidden hover:shadow-md transition-all duration-200 ${
-                      isDark ? "bg-[#162624] border-[#24413D]" : "bg-white border-gray-100"
+                      isDark ? "bg-[#1A2234] border-[#222F43]" : "bg-white border-slate-200"
                     }`}
                   >
                     <div className="relative">
                       <img src={hotel.image} alt={hotel.name} className="w-full h-48 object-cover" />
-                      <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${isDark ? "bg-[#1A302C] text-[#EAF2F0]" : "bg-white text-gray-800 shadow-sm"}`}>
+                      <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${isDark ? "bg-[#121827] text-slate-200 border border-[#222F43]" : "bg-white text-slate-800 shadow-sm"}`}>
                         Best Seller
                       </div>
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-lg mb-1 font-display">{hotel.name}</h3>
-                      <div className={`flex items-center text-sm mb-2 ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`}>
-                        <MapPin className="w-4 h-4 mr-1" />
+                      <div className={`flex items-center text-sm mb-2 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                        <MapPin className="w-4 h-4 mr-1 text-indigo-500" />
                         {hotel.location}
                       </div>
                       <div className="flex items-center justify-between border-t pt-3 mt-2 border-transparent">
-                        <div className="flex items-center text-yellow-500">
+                        <div className="flex items-center text-amber-400">
                           {[...Array(hotel.rating)].map((_, i) => (
                             <Star key={i} className="w-4 h-4 fill-current" />
                           ))}
                         </div>
                         <div className="text-right">
-                          <div className={`text-xs ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>Starting from</div>
+                          <div className={`text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}>Starting from</div>
                           <div className="font-bold text-lg font-display">₹ {hotel.price.toLocaleString()}</div>
                         </div>
                       </div>
@@ -486,12 +485,12 @@ const BookFlightPage = () => {
           <div className="lg:col-span-1">
             <div className={`rounded-xl p-6 border sticky top-24 transition-colors ${cardStyles}`}>
               <h2 className="text-lg font-bold mb-6 flex items-center font-display">
-                <CreditCard className="w-5 h-5 mr-2 text-gray-400" />
+                <CreditCard className="w-5 h-5 mr-2 text-indigo-500" />
                 Fare Summary
               </h2>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className={isDark ? "text-[#A7BFBA]" : "text-gray-600"}>Base Fare</span>
+                  <span className={isDark ? "text-slate-400" : "text-slate-600"}>Base Fare</span>
                   <span className="font-medium">₹ {baseFlightFare.toLocaleString()}</span>
                 </div>
                 {seatSurcharge > 0 && (
@@ -501,18 +500,18 @@ const BookFlightPage = () => {
                   </div>
                 )}
                 <div className="flex justify-between items-center">
-                  <span className={isDark ? "text-[#A7BFBA]" : "text-gray-600"}>Taxes and Surcharges</span>
+                  <span className={isDark ? "text-slate-400" : "text-slate-600"}>Taxes and Surcharges</span>
                   <span className="font-medium">₹ {totalTaxes.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className={isDark ? "text-[#A7BFBA]" : "text-gray-600"}>Other Services</span>
+                  <span className={isDark ? "text-slate-400" : "text-slate-600"}>Other Services</span>
                   <span className="font-medium">₹ {totalOtherServices.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between items-center text-green-500">
+                <div className="flex justify-between items-center text-emerald-500">
                   <span className="font-medium">Discounts</span>
                   <span className="font-medium">- ₹ {Math.abs(totalDiscounts).toLocaleString()}</span>
                 </div>
-                <div className={`border-t pt-3 mt-3 ${isDark ? "border-[#24413D]" : "border-gray-100"}`}>
+                <div className={`border-t pt-3 mt-3 ${isDark ? "border-[#222F43]" : "border-slate-200"}`}>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-lg font-display">Total Amount</span>
                     <span className="font-bold text-lg font-display">₹ {grandTotal.toLocaleString()}</span>
@@ -535,23 +534,25 @@ const BookFlightPage = () => {
 
               <Dialog open={open} onOpenChange={setopem}>
                 <DialogTrigger asChild>
-                  <Button className={`w-full text-white font-semibold transition-colors ${
-                    isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                  <Button className={`w-full text-white font-semibold transition-colors rounded-lg py-2.5 ${
+                    isDark 
+                      ? "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500" 
+                      : "bg-indigo-600 hover:bg-indigo-700"
                   }`}>
                     Book Now
                   </Button>
                 </DialogTrigger>
                 {user ? (
-                  <DialogContent className={`sm:max-w-[600px] border transition-colors ${isDark ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" : "bg-white text-[#22322F]"}`}>
+                  <DialogContent className={`sm:max-w-[600px] border transition-colors ${isDark ? "bg-[#121827] border-[#222F43] text-slate-100" : "bg-white border-slate-200 text-slate-900"}`}>
                     <DialogHeader>
                       <DialogTitle className="text-2xl font-bold flex items-center font-display">
-                        <Plane className={`w-6 h-6 mr-2 ${isDark ? "text-[#7FD1C4]" : "text-[#3E6E6A]"}`} />
+                        <Plane className={`w-6 h-6 mr-2 ${isDark ? "text-indigo-400" : "text-indigo-600"}`} />
                         Flight Booking Details
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs value={activeBookingTab} onValueChange={setActiveBookingTab} className="mt-4">
                       <TabsList className={`grid w-full grid-cols-2 p-1 rounded-xl transition-colors mb-4 ${
-                        isDark ? "bg-[#162624] border border-[#24413D]" : "bg-gray-100"
+                        isDark ? "bg-[#1A2234] border border-[#222F43]" : "bg-slate-100"
                       }`}>
                         <TabsTrigger value="details" className={tabTriggerStyles(activeBookingTab === "details")}>Details & Fare</TabsTrigger>
                         <TabsTrigger value="seats" className={tabTriggerStyles(activeBookingTab === "seats")}>
@@ -564,56 +565,56 @@ const BookFlightPage = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                               <Label htmlFor="flightName" className={`flex items-center ${labelStyles}`}>
-                                <Plane className="w-4 h-4 mr-2" />
+                                <Plane className="w-4 h-4 mr-2 text-indigo-500" />
                                 Flight Name
                               </Label>
                               <Input id="flightName" value={flight?.flightName} readOnly className={inputStyles} />
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="from" className={`flex items-center ${labelStyles}`}>
-                                <MapPin className="w-4 h-4 mr-2" />
+                                <MapPin className="w-4 h-4 mr-2 text-indigo-500" />
                                 From
                               </Label>
                               <Input id="from" value={flight?.from} readOnly className={inputStyles} />
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="to" className={`flex items-center ${labelStyles}`}>
-                                <MapPin className="w-4 h-4 mr-2" />
+                                <MapPin className="w-4 h-4 mr-2 text-indigo-500" />
                                 To
                               </Label>
                               <Input id="to" value={flight?.to} readOnly className={inputStyles} />
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="departureTime" className={`flex items-center ${labelStyles}`}>
-                                <Calendar className="w-4 h-4 mr-2" />
+                                <Calendar className="w-4 h-4 mr-2 text-indigo-500" />
                                 Departure Time
                               </Label>
                               <Input id="departureTime" value={new Date(flight.departureTime).toLocaleString()} readOnly className={inputStyles} />
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="arrivalTime" className={`flex items-center ${labelStyles}`}>
-                                <Clock className="w-4 h-4 mr-2" />
+                                <Clock className="w-4 h-4 mr-2 text-indigo-500" />
                                 Arrival Time
                               </Label>
                               <Input id="arrivalTime" value={new Date(flight.arrivalTime).toLocaleString()} readOnly className={inputStyles} />
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="quantity" className={`flex items-center ${labelStyles}`}>
-                                <Ticket className="w-4 h-4 mr-2" />
+                                <Ticket className="w-4 h-4 mr-2 text-indigo-500" />
                                 Number of Tickets
                               </Label>
                               <Input id="quantity" type="number" min="1" max={flight.availableSeats} value={quantity} onChange={handleQuantityChange} className={inputStyles} />
                             </div>
                           </div>
 
-                          <div className={`rounded-lg p-4 transition-colors ${isDark ? "bg-[#162624] border border-[#24413D]" : "bg-gray-100"}`}>
+                          <div className={`rounded-lg p-4 transition-colors ${isDark ? "bg-[#1A2234] border border-[#222F43]" : "bg-slate-50 border border-slate-200"}`}>
                             <h3 className="text-lg font-bold mb-4 flex items-center font-display">
-                              <CreditCard className="w-5 h-5 mr-2" />
+                              <CreditCard className="w-5 h-5 mr-2 text-indigo-500" />
                               Fare Summary
                             </h3>
                             <div className="space-y-2">
                               <div className="flex justify-between items-center">
-                                <span className={isDark ? "text-[#A7BFBA]" : "text-gray-600"}>Base Fare</span>
+                                <span className={isDark ? "text-slate-400" : "text-slate-600"}>Base Fare</span>
                                 <span className="font-medium">₹ {baseFlightFare.toLocaleString()}</span>
                               </div>
                               {seatSurcharge > 0 && (
@@ -623,18 +624,18 @@ const BookFlightPage = () => {
                                 </div>
                               )}
                               <div className="flex justify-between items-center">
-                                <span className={isDark ? "text-[#A7BFBA]" : "text-gray-600"}>Taxes and Surcharges</span>
+                                <span className={isDark ? "text-slate-400" : "text-slate-600"}>Taxes and Surcharges</span>
                                 <span className="font-medium">₹ {totalTaxes.toLocaleString()}</span>
                               </div>
                               <div className="flex justify-between items-center">
-                                <span className={isDark ? "text-[#A7BFBA]" : "text-gray-600"}>Other Services</span>
+                                <span className={isDark ? "text-slate-400" : "text-slate-600"}>Other Services</span>
                                 <span className="font-medium">₹ {totalOtherServices.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between items-center text-green-500">
+                              <div className="flex justify-between items-center text-emerald-500">
                                 <span className="font-medium">Discounts</span>
                                 <span className="font-medium">- ₹ {Math.abs(totalDiscounts).toLocaleString()}</span>
                               </div>
-                              <div className={`border-t pt-2 mt-2 ${isDark ? "border-[#24413D]" : "border-gray-200"}`}>
+                              <div className={`border-t pt-2 mt-2 ${isDark ? "border-[#222F43]" : "border-slate-200"}`}>
                                 <div className="flex justify-between items-center">
                                   <span className="font-bold text-lg font-display">Total Amount</span>
                                   <span className="font-bold text-lg font-display">₹ {grandTotal.toLocaleString()}</span>
@@ -657,7 +658,9 @@ const BookFlightPage = () => {
 
                     <Button
                       className={`w-full mt-4 text-white font-medium ${
-                        isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                        isDark 
+                          ? "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500" 
+                          : "bg-indigo-600 hover:bg-indigo-700"
                       }`}
                       onClick={handlebooking}
                       disabled={selectedSeatIds.length !== quantity}
@@ -668,15 +671,17 @@ const BookFlightPage = () => {
                     </Button>
                   </DialogContent>
                 ) : (
-                  <DialogContent className={`border transition-colors ${isDark ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" : "bg-white text-[#22322F]"}`}>
+                  <DialogContent className={`border transition-colors ${isDark ? "bg-[#121827] border-[#222F43] text-slate-100" : "bg-white border-slate-200 text-slate-900"}`}>
                     <DialogHeader>
                       <DialogTitle className="font-display">Login Required</DialogTitle>
                     </DialogHeader>
-                    <p className={isDark ? "text-[#A7BFBA]" : "text-gray-600"}>Please log in to continue with your booking.</p>
+                    <p className={isDark ? "text-slate-400" : "text-slate-600"}>Please log in to continue with your booking.</p>
                     <SignupDialog
                       trigger={
                         <Button className={`w-full text-white font-medium ${
-                          isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                          isDark 
+                            ? "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500" 
+                            : "bg-indigo-600 hover:bg-indigo-700"
                         }`}>
                           Log In / Sign Up
                         </Button>
@@ -688,8 +693,8 @@ const BookFlightPage = () => {
 
               {/* Promo Codes */}
               <div className="mt-8">
-                <div className={`p-6 rounded-xl border transition-colors ${isDark ? "bg-[#162624] border-[#24413D]" : "bg-[#FFF8E7] border-transparent"}`}>
-                  <h3 className={`font-bold mb-4 flex items-center font-display ${isDark ? "text-[#7FD1C4]" : "text-yellow-700"}`}>
+                <div className={`p-6 rounded-xl border transition-colors ${isDark ? "bg-[#1A2234] border-[#222F43]" : "bg-indigo-50/50 border-indigo-100"}`}>
+                  <h3 className={`font-bold mb-4 flex items-center font-display ${isDark ? "text-indigo-400" : "text-indigo-700"}`}>
                     <Gift className="w-5 h-5 mr-2" />
                     PROMO CODES
                   </h3>
@@ -699,8 +704,8 @@ const BookFlightPage = () => {
                       placeholder="Enter promo code here"
                       className={`w-full px-4 py-3 rounded-lg focus:ring-2 transition-all ${
                         isDark 
-                          ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0] focus:ring-[#7FD1C4] placeholder-[#7C948F]" 
-                          : "bg-white border-gray-200 focus:ring-red-500 placeholder-gray-400"
+                          ? "bg-[#121827] border-[#222F43] text-slate-100 focus:ring-indigo-500 placeholder-slate-500" 
+                          : "bg-white border-slate-200 text-slate-900 focus:ring-indigo-500 placeholder-slate-400"
                       }`}
                     />
                   </div>
@@ -708,23 +713,23 @@ const BookFlightPage = () => {
                     <div
                       key={index}
                       className={`p-4 rounded-lg mb-3 shadow-sm border transition-colors ${
-                        isDark ? "bg-[#1A302C] border-[#24413D]" : "bg-white border-transparent"
+                        isDark ? "bg-[#121827] border-[#222F43]" : "bg-white border-slate-200"
                       }`}
                     >
                       <div className="flex items-start gap-3">
                         <input
                           type="radio"
                           name="promo"
-                          className={`mt-1.5 h-4 w-4 focus:ring-offset-0 ${isDark ? "text-[#7FD1C4] accent-[#7FD1C4]" : "text-red-600"}`}
+                          className={`mt-1.5 h-4 w-4 focus:ring-offset-0 ${isDark ? "text-indigo-500 accent-indigo-500" : "text-indigo-600 accent-indigo-600"}`}
                         />
                         <div>
-                          <div className={`font-semibold ${isDark ? "text-[#7FD1C4]" : "text-red-600"}`}>
+                          <div className={`font-semibold ${isDark ? "text-indigo-400" : "text-indigo-600"}`}>
                             {offer.code}
                           </div>
-                          <p className={`text-sm mt-1 ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`}>
+                          <p className={`text-sm mt-1 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
                             {offer.description}
                           </p>
-                          <button className={`text-sm font-medium mt-2 block ${isDark ? "text-[#7FD1C4] hover:underline" : "text-blue-600 hover:text-blue-700"}`}>
+                          <button className={`text-sm font-medium mt-2 block ${isDark ? "text-indigo-400 hover:underline" : "text-indigo-600 hover:underline"}`}>
                             Terms & Conditions
                           </button>
                         </div>

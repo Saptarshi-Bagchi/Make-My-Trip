@@ -12,15 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
 import { Textarea } from "@/components/ui/textarea";
 import FlightList from "@/components/Flights/Flightlist";
 import {
@@ -125,32 +116,32 @@ function UserSearch({ isDark }: { isDark: boolean }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className={isDark ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] placeholder-[#7C948F]" : "bg-white border-[#DCE7E4] text-[#1F3330]"}
+            className={isDark ? "bg-[#121827] border-[#2A3854] text-white placeholder-slate-500 focus-visible:ring-indigo-500/40" : "bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus-visible:ring-indigo-500/30"}
           />
         </div>
         <Button 
           type="submit"
           className={`text-white transition-colors ${
-            isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+            isDark ? "bg-indigo-600 hover:bg-indigo-500" : "bg-indigo-600 hover:bg-indigo-700"
           }`}
         >
           Search
         </Button>
       </form>
       {user && (
-        <div className={`border p-4 rounded-md transition-colors ${isDark ? "bg-[#162624] border-[#24413D]" : "bg-[#F1F6F5] border-[#E3ECE9]"}`}>
-          <h3 className={`font-bold mb-2 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>User Details</h3>
-          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
-            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Name:</strong> {user.firstName} {user.lastName}
+        <div className={`border p-4 rounded-xl transition-colors ${isDark ? "bg-[#121827] border-[#2A3854]" : "bg-indigo-50/60 border-indigo-100"}`}>
+          <h3 className={`font-bold mb-2 font-display ${isDark ? "text-white" : "text-slate-900"}`}>User Details</h3>
+          <p className={isDark ? "text-slate-400" : "text-slate-600"}>
+            <strong className={isDark ? "text-white" : "text-slate-900"}>Name:</strong> {user.firstName} {user.lastName}
           </p>
-          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
-            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Email:</strong> {user.email}
+          <p className={isDark ? "text-slate-400" : "text-slate-600"}>
+            <strong className={isDark ? "text-white" : "text-slate-900"}>Email:</strong> {user.email}
           </p>
-          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
-            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Role:</strong> {user.role}
+          <p className={isDark ? "text-slate-400" : "text-slate-600"}>
+            <strong className={isDark ? "text-white" : "text-slate-900"}>Role:</strong> {user.role}
           </p>
-          <p className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
-            <strong className={isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}>Phone:</strong> {user.phoneNumber}
+          <p className={isDark ? "text-slate-400" : "text-slate-600"}>
+            <strong className={isDark ? "text-white" : "text-slate-900"}>Phone:</strong> {user.phoneNumber}
           </p>
         </div>
       )}
@@ -228,17 +219,17 @@ function AddEditHotel({ hotel, isDark }: { hotel: Hotel | null; isDark: boolean 
     }
   };
 
-  const inputStyles = isDark 
-    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4]" 
-    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]";
+  const inputStyles = isDark
+    ? "bg-[#121827] border-[#2A3854] text-white focus-visible:ring-indigo-500/40"
+    : "bg-white border-slate-200 text-slate-900 focus-visible:ring-indigo-500/30";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className={`text-lg font-semibold mb-2 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>
+      <h3 className={`text-lg font-semibold mb-2 font-display ${isDark ? "text-white" : "text-slate-900"}`}>
         {hotel ? "Edit Hotel" : "Add New Hotel"}
       </h3>
       <div>
-        <Label htmlFor="hotelName" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Hotel Name</Label>
+        <Label htmlFor="hotelName" className={isDark ? "text-slate-400" : "text-slate-600"}>Hotel Name</Label>
         <Input
           id="hotelName"
           name="hotelName"
@@ -249,7 +240,7 @@ function AddEditHotel({ hotel, isDark }: { hotel: Hotel | null; isDark: boolean 
         />
       </div>
       <div>
-        <Label htmlFor="location" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Location</Label>
+        <Label htmlFor="location" className={isDark ? "text-slate-400" : "text-slate-600"}>Location</Label>
         <Input
           id="location"
           name="location"
@@ -260,7 +251,7 @@ function AddEditHotel({ hotel, isDark }: { hotel: Hotel | null; isDark: boolean 
         />
       </div>
       <div>
-        <Label htmlFor="pricePerNight" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Price Per Night</Label>
+        <Label htmlFor="pricePerNight" className={isDark ? "text-slate-400" : "text-slate-600"}>Price Per Night</Label>
         <Input
           id="pricePerNight"
           name="pricePerNight"
@@ -272,7 +263,7 @@ function AddEditHotel({ hotel, isDark }: { hotel: Hotel | null; isDark: boolean 
         />
       </div>
       <div>
-        <Label htmlFor="availableRooms" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Available Rooms</Label>
+        <Label htmlFor="availableRooms" className={isDark ? "text-slate-400" : "text-slate-600"}>Available Rooms</Label>
         <Input
           id="availableRooms"
           name="availableRooms"
@@ -284,7 +275,7 @@ function AddEditHotel({ hotel, isDark }: { hotel: Hotel | null; isDark: boolean 
         />
       </div>
       <div>
-        <Label htmlFor="amenities" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Amenities</Label>
+        <Label htmlFor="amenities" className={isDark ? "text-slate-400" : "text-slate-600"}>Amenities</Label>
         <Textarea
           id="amenities"
           name="amenities"
@@ -297,7 +288,7 @@ function AddEditHotel({ hotel, isDark }: { hotel: Hotel | null; isDark: boolean 
       <Button 
         type="submit"
         className={`text-white transition-colors ${
-          isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+          isDark ? "bg-indigo-600 hover:bg-indigo-500" : "bg-indigo-600 hover:bg-indigo-700"
         }`}
       >
         {hotel ? "Update Hotel" : "Add Hotel"}
@@ -387,17 +378,17 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
     }
   };
 
-  const inputStyles = isDark 
-    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4]" 
-    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]";
+  const inputStyles = isDark
+    ? "bg-[#121827] border-[#2A3854] text-white focus-visible:ring-indigo-500/40"
+    : "bg-white border-slate-200 text-slate-900 focus-visible:ring-indigo-500/30";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className={`text-lg font-semibold mb-2 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>
+      <h3 className={`text-lg font-semibold mb-2 font-display ${isDark ? "text-white" : "text-slate-900"}`}>
         {flight ? "Edit Flight" : "Add New Flight"}
       </h3>
       <div>
-        <Label htmlFor="flightName" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Flight Name</Label>
+        <Label htmlFor="flightName" className={isDark ? "text-slate-400" : "text-slate-600"}>Flight Name</Label>
         <Input
           id="flightName"
           name="flightName"
@@ -408,7 +399,7 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
         />
       </div>
       <div>
-        <Label htmlFor="from" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>From</Label>
+        <Label htmlFor="from" className={isDark ? "text-slate-400" : "text-slate-600"}>From</Label>
         <Input
           id="from"
           name="from"
@@ -419,7 +410,7 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
         />
       </div>
       <div>
-        <Label htmlFor="to" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>To</Label>
+        <Label htmlFor="to" className={isDark ? "text-slate-400" : "text-slate-600"}>To</Label>
         <Input
           id="to"
           name="to"
@@ -430,7 +421,7 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
         />
       </div>
       <div>
-        <Label htmlFor="departureTime" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Departure Time</Label>
+        <Label htmlFor="departureTime" className={isDark ? "text-slate-400" : "text-slate-600"}>Departure Time</Label>
         <Input
           id="departureTime"
           name="departureTime"
@@ -442,7 +433,7 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
         />
       </div>
       <div>
-        <Label htmlFor="arrivalTime" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Arrival Time</Label>
+        <Label htmlFor="arrivalTime" className={isDark ? "text-slate-400" : "text-slate-600"}>Arrival Time</Label>
         <Input
           id="arrivalTime"
           name="arrivalTime"
@@ -454,7 +445,7 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
         />
       </div>
       <div>
-        <Label htmlFor="price" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Price</Label>
+        <Label htmlFor="price" className={isDark ? "text-slate-400" : "text-slate-600"}>Price</Label>
         <Input
           id="price"
           name="price"
@@ -466,7 +457,7 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
         />
       </div>
       <div>
-        <Label htmlFor="availableSeats" className={isDark ? "text-[#7FA39D]" : "text-[#62807C]"}>Available Seats</Label>
+        <Label htmlFor="availableSeats" className={isDark ? "text-slate-400" : "text-slate-600"}>Available Seats</Label>
         <Input
           id="availableSeats"
           name="availableSeats"
@@ -480,7 +471,7 @@ function AddEditFlight({ flight, isDark }: { flight: Flight | null; isDark: bool
       <Button 
         type="submit"
         className={`text-white transition-colors ${
-          isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+          isDark ? "bg-indigo-600 hover:bg-indigo-500" : "bg-indigo-600 hover:bg-indigo-700"
         }`}
       >
         {flight ? "Update Flight" : "Add Flight"}
@@ -496,36 +487,41 @@ export default function AdminDashboard() {
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
 
-  const cardStyles = isDark 
-    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
-    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.25)] text-[#22322F]";
+  const cardStyles = isDark
+    ? "bg-[#121827]/90 border-[#222F43] text-slate-100 shadow-2xl shadow-black/20"
+    : "bg-white/90 border-slate-200 shadow-xl shadow-slate-200/50 text-slate-900";
 
   const tabTriggerStyles = (isActive: boolean) => {
     if (isDark) {
-      return isActive 
-        ? "text-[#7FD1C4] bg-[#162624]" 
-        : "text-[#7C948F] hover:text-[#7FD1C4]";
+      return isActive
+        ? "text-white bg-indigo-600 shadow-sm"
+        : "text-slate-400 hover:text-white hover:bg-[#1A2234]";
     }
-    return isActive 
-      ? "text-[#3E6E6A] bg-[#EAF2F0]" 
-      : "text-[#7C948F] hover:text-[#3E6E6A]";
+    return isActive
+      ? "text-indigo-700 bg-white shadow-sm"
+      : "text-slate-500 hover:text-indigo-600 hover:bg-white/70";
   };
 
   const scrollbarStyles = isDark
-    ? "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#162624] [&::-webkit-scrollbar-thumb]:bg-[#3E6E6A] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#4A8580]"
-    : "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#F1F6F5] [&::-webkit-scrollbar-thumb]:bg-[#DCE7E4] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#C3D4D0]";
+    ? "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#121827] [&::-webkit-scrollbar-thumb]:bg-[#2A3854] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-indigo-600"
+    : "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-indigo-300";
 
   return (
-    <div className={`container mx-auto p-6 max-w-full min-h-screen transition-colors duration-300 ${
-      isDark ? "bg-[#162624] text-[#EAF2F0]" : "bg-[#F1F6F5] text-[#22322F]"
+    <div className={`min-h-screen transition-colors duration-300 ${
+      isDark ? "bg-[#0A0D14] text-slate-100" : "bg-slate-50 text-slate-900"
     }`}>
-      <h1 className={`text-3xl font-bold mb-6 font-display ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>
-        Admin Dashboard
-      </h1>
+      <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+      <div className="mb-8">
+        <p className={`mb-2 text-sm font-semibold uppercase tracking-[0.18em] ${isDark ? "text-indigo-400" : "text-indigo-600"}`}>MakeMyTour control centre</p>
+        <h1 className={`font-display text-3xl font-bold tracking-tight sm:text-4xl ${isDark ? "text-white" : "text-slate-900"}`}>
+          Admin Dashboard
+        </h1>
+        <p className={`mt-2 text-sm sm:text-base ${isDark ? "text-slate-400" : "text-slate-600"}`}>Manage flights, hotels, and traveller accounts from one place.</p>
+      </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className={`grid w-full grid-cols-3 p-1 rounded-xl mb-6 backdrop-blur border transition-colors ${
-          isDark ? "bg-[#1A302C]/90 border-[#24413D]" : "bg-white/90 border-transparent shadow-sm"
+          isDark ? "bg-[#121827]/90 border-[#222F43]" : "bg-slate-100/90 border-slate-200"
         }`}>
           <TabsTrigger value="flights" className={tabTriggerStyles(activeTab === "flights")}>Flights</TabsTrigger>
           <TabsTrigger value="hotels" className={tabTriggerStyles(activeTab === "hotels")}>Hotels</TabsTrigger>
@@ -535,15 +531,15 @@ export default function AdminDashboard() {
         <TabsContent value="flights">
           <Card className={cardStyles}>
             <CardHeader>
-              <CardTitle className={`font-display text-xl ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>Manage Flights</CardTitle>
-              <CardDescription className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
+              <CardTitle className={`font-display text-xl ${isDark ? "text-white" : "text-slate-900"}`}>Manage Flights</CardTitle>
+              <CardDescription className={isDark ? "text-slate-400" : "text-slate-600"}>
                 Add, edit, or remove flights from the system.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className={`max-h-[420px] overflow-y-auto pr-2 custom-scrollbar ${scrollbarStyles}`}>
-                  <FlightList onSelect={setSelectedFlight} />
+                  <FlightList onSelect={setSelectedFlight} isDark={isDark} />
                 </div>
                 <AddEditFlight flight={selectedFlight} isDark={isDark} />
               </div>
@@ -554,15 +550,15 @@ export default function AdminDashboard() {
         <TabsContent value="hotels">
           <Card className={cardStyles}>
             <CardHeader>
-              <CardTitle className={`font-display text-xl ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>Manage Hotels</CardTitle>
-              <CardDescription className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>
+              <CardTitle className={`font-display text-xl ${isDark ? "text-white" : "text-slate-900"}`}>Manage Hotels</CardTitle>
+              <CardDescription className={isDark ? "text-slate-400" : "text-slate-600"}>
                 Add, edit, or remove hotels from the system.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className={`max-h-[420px] overflow-y-auto pr-2 custom-scrollbar ${scrollbarStyles}`}>
-                  <HotelList onSelect={setSelectedHotel} />
+                  <HotelList onSelect={setSelectedHotel} isDark={isDark} />
                 </div>
                 <AddEditHotel hotel={selectedHotel} isDark={isDark} />
               </div>
@@ -573,8 +569,8 @@ export default function AdminDashboard() {
         <TabsContent value="users">
           <Card className={cardStyles}>
             <CardHeader>
-              <CardTitle className={`font-display text-xl ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}>User Management</CardTitle>
-              <CardDescription className={isDark ? "text-[#A7BFBA]" : "text-[#4C6663]"}>Search for users by email.</CardDescription>
+              <CardTitle className={`font-display text-xl ${isDark ? "text-white" : "text-slate-900"}`}>User Management</CardTitle>
+              <CardDescription className={isDark ? "text-slate-400" : "text-slate-600"}>Search for users by email.</CardDescription>
             </CardHeader>
             <CardContent>
               <UserSearch isDark={isDark} />
@@ -582,6 +578,7 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

@@ -17,7 +17,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { clearUser, setUser } from "@/store";
-import { editprofile, getflight, cancelBooking } from "@/api";
+import { editprofile, getflight, cancelBooking, getUserRefunds } from "@/api";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useFlightTracking } from "@/lib/flightTrackingContext";
 import { useEffect } from "react";
@@ -25,7 +25,7 @@ import FlightStatusPanel from "@/components/FlightStatusPanel";
 import CancelBookingDialog from "@/components/CancelBookingDialog";
 import RefundStatusCard from "@/components/RefundStatusCard";
 import { calculateRefund, calculateHotelRefund, RefundCalculation } from "@/lib/refundPolicy";
-import { addRefundRecord, getAllRefunds, RefundWithStatus } from "@/lib/refundTracker";
+import { getAllRefunds, RefundWithStatus } from "@/lib/refundTracker";
 import { useTheme } from "@/components/ThemeContext";
 
 const ProfilePage = () => {
@@ -126,10 +126,22 @@ const ProfilePage = () => {
   const [refunds, setRefunds] = useState<RefundWithStatus[]>([]);
 
   useEffect(() => {
-    setRefunds(getAllRefunds());
-    const timer = setInterval(() => setRefunds(getAllRefunds()), 60000);
+    if (!user?.id) {
+      setRefunds([]);
+      return;
+    }
+
+    const loadRefunds = async () => {
+      try {
+        const records = await getUserRefunds(user.id);
+        if (Array.isArray(records)) setRefunds(getAllRefunds(records));
+      } catch {}
+    };
+
+    loadRefunds();
+    const timer = setInterval(loadRefunds, 60000);
     return () => clearInterval(timer);
-  }, []);
+  }, [user?.id]);
 
   const getRefundForTarget = (booking: any): RefundCalculation => {
     if (booking.type === "Flight") {
@@ -143,27 +155,20 @@ const ProfilePage = () => {
     if (!cancelTarget) return;
     setIsCancelling(true);
     try {
-      await cancelBooking(user?.id, cancelTarget.__originalIndex);
-
-      const updatedBookings = (user?.bookings ?? []).filter(
-        (_: any, idx: number) => idx !== cancelTarget.__originalIndex
-      );
-      dispatch(setUser({ ...user, bookings: updatedBookings }));
-
       const label =
         cancelTarget.type === "Flight"
           ? `${flightsById[cancelTarget.bookingId]?.from ?? "?"} → ${flightsById[cancelTarget.bookingId]?.to ?? "?"}`
           : `Hotel booking ${cancelTarget.bookingId}`;
 
-      addRefundRecord({
+      const updatedUser = await cancelBooking(user?.id, cancelTarget.__originalIndex, {
         entityType: cancelTarget.type === "Flight" ? "flight" : "hotel",
         label,
         reason,
-        originalAmount: cancelTarget.totalPrice,
         refundAmount,
         refundPercentage,
       });
-      setRefunds(getAllRefunds());
+      dispatch(setUser(updatedUser));
+      setRefunds(getAllRefunds(updatedUser.refunds ?? []));
 
       setCancelTarget(null);
     } catch (error) {
@@ -173,17 +178,17 @@ const ProfilePage = () => {
     }
   };
 
-  // Harmonized palette configurations matching the booking engine layout
+  // Landing-page palette configurations
   const cardStyles = isDark 
-    ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
-    : "bg-white border-transparent shadow-[0_8px_30px_-12px_rgba(31,51,48,0.15)] text-[#22322F]";
+    ? "bg-[#121826]/90 border-[#222F43] text-[#F1F5F9] shadow-xl shadow-black/20" 
+    : "bg-white/90 border-slate-200/80 shadow-lg shadow-slate-200/50 text-[#0F172A]";
 
   const inputStyles = isDark 
-    ? "bg-[#162624] border-[#24413D] text-[#EAF2F0] focus:border-[#7FD1C4] focus-visible:ring-0" 
-    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A] focus-visible:ring-0";
+    ? "bg-[#1A2234] border-[#2A3854] text-[#F1F5F9] focus:border-indigo-500 focus-visible:ring-0" 
+    : "bg-white border-slate-200 text-[#0F172A] focus:border-indigo-600 focus-visible:ring-0";
 
-  const subtextStyles = isDark ? "text-[#A7BFBA]" : "text-gray-600";
-  const labelStyles = isDark ? "text-[#7FA39D]" : "text-[#62807C]";
+  const subtextStyles = isDark ? "text-slate-400" : "text-slate-600";
+  const labelStyles = isDark ? "text-slate-400" : "text-slate-500";
 
   const renderBookingCard = (booking: any, index: any) => {
     const liveStatus =
@@ -199,17 +204,17 @@ const ProfilePage = () => {
       <div
         key={index}
         className={`border rounded-xl p-4 transition-all ${
-          isDark ? "border-[#24413D] bg-[#162624]/40" : "border-slate-100 bg-white shadow-sm hover:shadow-md"
+          isDark ? "border-[#2A3854] bg-[#1A2234]/70 hover:border-indigo-500/50" : "border-slate-200 bg-white shadow-sm hover:shadow-lg"
         }`}
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             {booking?.type === "Flight" ? (
-              <div className={`p-2 rounded-lg ${isDark ? "bg-[#2C504D]/50 text-[#7FD1C4]" : "bg-blue-50 text-blue-600"}`}>
+              <div className={`p-2 rounded-lg ${isDark ? "bg-indigo-950/80 text-indigo-300" : "bg-indigo-50 text-indigo-600"}`}>
                 <Plane className="w-6 h-6" />
               </div>
             ) : (
-              <div className={`p-2 rounded-lg ${isDark ? "bg-[#2C504D]/50 text-emerald-400" : "bg-emerald-50 text-emerald-600"}`}>
+              <div className={`p-2 rounded-lg ${isDark ? "bg-indigo-950/80 text-indigo-300" : "bg-indigo-50 text-indigo-600"}`}>
                 <Building2 className="w-6 h-6" />
               </div>
             )}
@@ -219,12 +224,12 @@ const ProfilePage = () => {
                 Booking ID: {booking?.bookingId}
               </p>
               {booking?.type === "Flight" && booking?.seatNumbers && (
-                <p className={`text-xs font-medium mt-0.5 ${isDark ? "text-[#7FD1C4]" : "text-blue-600"}`}>
+                <p className={`text-xs font-medium mt-0.5 ${isDark ? "text-indigo-300" : "text-indigo-600"}`}>
                   Seats: {booking.seatNumbers}
                 </p>
               )}
               {booking?.type === "Hotel" && booking?.roomType && (
-                <p className={`text-xs font-medium mt-0.5 ${isDark ? "text-[#7FD1C4]" : "text-emerald-600"}`}>
+                <p className={`text-xs font-medium mt-0.5 ${isDark ? "text-indigo-300" : "text-indigo-600"}`}>
                   {booking.roomType}
                 </p>
               )}
@@ -244,7 +249,7 @@ const ProfilePage = () => {
           </div>
         )}
 
-        <div className={`flex flex-wrap gap-4 text-sm pt-3 border-t ${isDark ? "border-[#24413D] text-[#A7BFBA]" : "border-gray-100 text-gray-600"}`}>
+        <div className={`flex flex-wrap gap-4 text-sm pt-3 border-t ${isDark ? "border-[#2A3854] text-slate-400" : "border-slate-200 text-slate-600"}`}>
           <div className="flex items-center space-x-1">
             <Calendar className="w-4 h-4" />
             <span>{formatDate(booking?.date)}</span>
@@ -269,7 +274,7 @@ const ProfilePage = () => {
           </button>
         ) : (
           <div className={`mt-3 rounded-lg border px-3 py-2 text-sm ${
-            isDark ? "border-[#24413D] bg-[#162624] text-[#7C948F]" : "border-slate-200 bg-slate-50 text-slate-500"
+            isDark ? "border-[#2A3854] bg-[#1A2234] text-slate-400" : "border-slate-200 bg-slate-50 text-slate-500"
           }`}>
             {booking.type === "Flight" ? "This flight has already departed, so cancellation is no longer available." : "Cancellation is no longer available for this booking."}
           </div>
@@ -279,7 +284,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-[#162624] text-[#EAF2F0]" : "bg-[#f4f7fa] text-[#22322F]"}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-[#0A0D14] text-[#F1F5F9]" : "bg-[#F8FAFC] text-[#0F172A]"}`}>
       <main className="mx-auto max-w-7xl px-4 py-8 lg:py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           
@@ -288,7 +293,7 @@ const ProfilePage = () => {
             <div className={`rounded-xl p-6 border transition-colors ${cardStyles}`}>
               <div className="flex justify-between items-start mb-5">
                 <div>
-                  <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>
+                  <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
                     Your Details
                   </p>
                   <h2 className="mt-1 text-xl font-bold font-display">Profile</h2>
@@ -296,7 +301,7 @@ const ProfilePage = () => {
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className={`flex items-center space-x-1 text-sm font-semibold ${isDark ? "text-[#7FD1C4] hover:text-[#aef3e8]" : "text-[#3E6E6A] hover:text-[#2C504D]"}`}
+                    className={`flex items-center space-x-1 text-sm font-semibold ${isDark ? "text-indigo-300 hover:text-indigo-200" : "text-indigo-600 hover:text-indigo-700"}`}
                   >
                     <Edit2 className="w-4 h-4" />
                     <span>Edit</span>
@@ -354,7 +359,7 @@ const ProfilePage = () => {
                     <button
                       onClick={handleSave}
                       className={`flex-1 text-white py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center justify-center space-x-2 ${
-                        isDark ? "bg-[#2C504D] hover:bg-[#3E6E6A]" : "bg-[#3E6E6A] hover:bg-[#2C504D]"
+                        "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500"
                       }`}
                     >
                       <Check className="w-4 h-4" />
@@ -367,7 +372,7 @@ const ProfilePage = () => {
                       }}
                       className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-colors flex items-center justify-center space-x-2 ${
                         isDark 
-                          ? "bg-[#162624] border-[#24413D] text-[#A7BFBA] hover:bg-[#1A302C]" 
+                          ? "bg-[#1A2234] border-[#2A3854] text-slate-300 hover:bg-[#22304A]" 
                           : "bg-slate-100 border-transparent text-slate-700 hover:bg-slate-200"
                       }`}
                     >
@@ -379,7 +384,7 @@ const ProfilePage = () => {
               ) : (
                 <div className="space-y-5">
                   <div className="flex items-center space-x-3">
-                    <User className={`w-5 h-5 ${isDark ? "text-[#7FA39D]" : "text-gray-400"}`} />
+                    <User className={`w-5 h-5 ${isDark ? "text-slate-400" : "text-slate-400"}`} />
                     <div>
                       <p className="font-medium text-sm">
                         {user?.firstName} {user?.lastName}
@@ -387,21 +392,21 @@ const ProfilePage = () => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Mail className={`w-5 h-5 ${isDark ? "text-[#7FA39D]" : "text-gray-400"}`} />
+                    <Mail className={`w-5 h-5 ${isDark ? "text-slate-400" : "text-slate-400"}`} />
                     <p className="text-sm">{user?.email}</p>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Phone className={`w-5 h-5 ${isDark ? "text-[#7FA39D]" : "text-gray-400"}`} />
+                    <Phone className={`w-5 h-5 ${isDark ? "text-slate-400" : "text-slate-400"}`} />
                     <p className="text-sm">{user?.phoneNumber}</p>
                   </div>
                   
-                  <div className={`border-t pt-4 ${isDark ? "border-[#24413D]" : "border-gray-100"}`}>
+                  <div className={`border-t pt-4 ${isDark ? "border-[#2A3854]" : "border-slate-200"}`}>
                     <button
                       className="w-full flex items-center justify-center space-x-2 text-sm font-medium text-rose-500 hover:text-rose-600 transition-colors"
                       onClick={logout}
                     >
                       <LogOut className="w-4 h-4" />
-                      <span>Logout Account</span>
+                      <span>Logout</span>
                     </button>
                   </div>
                 </div>
@@ -413,7 +418,7 @@ const ProfilePage = () => {
           <div className="md:col-span-2">
             <div className={`rounded-xl p-6 border transition-colors ${cardStyles}`}>
               <div className="mb-4">
-                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>
+                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
                   Transactions
                 </p>
                 <h2 className="mt-1 text-xl font-bold font-display">My Bookings</h2>
@@ -421,14 +426,14 @@ const ProfilePage = () => {
 
               <Tabs defaultValue="flights" className="w-full">
                 <TabsList className={`flex space-x-1 rounded-xl p-1 mb-6 border ${
-                  isDark ? "bg-[#162624] border-[#24413D]" : "bg-slate-100 border-transparent"
+                  isDark ? "bg-[#1A2234] border-[#2A3854]" : "bg-slate-100 border-slate-200"
                 }`}>
                   <TabsTrigger 
                     value="flights"
                     className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all data-[state=active]:shadow-sm ${
                       isDark 
-                        ? "data-[state=active]:bg-[#2C504D] data-[state=active]:text-[#EAF2F0] text-[#A7BFBA]" 
-                        : "data-[state=active]:bg-white data-[state=active]:text-[#22322F] text-gray-600"
+                        ? "data-[state=active]:bg-indigo-950/90 data-[state=active]:text-white text-slate-400" 
+                        : "data-[state=active]:bg-white data-[state=active]:text-indigo-600 text-slate-600"
                     }`}
                   >
                     Flights
@@ -437,8 +442,8 @@ const ProfilePage = () => {
                     value="hotels"
                     className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all data-[state=active]:shadow-sm ${
                       isDark 
-                        ? "data-[state=active]:bg-[#2C504D] data-[state=active]:text-[#EAF2F0] text-[#A7BFBA]" 
-                        : "data-[state=active]:bg-white data-[state=active]:text-[#22322F] text-gray-600"
+                        ? "data-[state=active]:bg-indigo-950/90 data-[state=active]:text-white text-slate-400" 
+                        : "data-[state=active]:bg-white data-[state=active]:text-indigo-600 text-slate-600"
                     }`}
                   >
                     Hotels
@@ -447,8 +452,8 @@ const ProfilePage = () => {
                     value="refunds"
                     className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all data-[state=active]:shadow-sm ${
                       isDark 
-                        ? "data-[state=active]:bg-[#2C504D] data-[state=active]:text-[#EAF2F0] text-[#A7BFBA]" 
-                        : "data-[state=active]:bg-white data-[state=active]:text-[#22322F] text-gray-600"
+                        ? "data-[state=active]:bg-indigo-950/90 data-[state=active]:text-white text-slate-400" 
+                        : "data-[state=active]:bg-white data-[state=active]:text-indigo-600 text-slate-600"
                     }`}
                   >
                     Refunds
@@ -461,7 +466,7 @@ const ProfilePage = () => {
                       flightBookings.map((booking: any, index: any) => renderBookingCard(booking, index))
                     ) : (
                       <div className={`rounded-xl border border-dashed p-8 text-center text-xs ${
-                        isDark ? "border-[#24413D] bg-[#162624] text-[#A7BFBA]" : "border-slate-200 bg-slate-50/50 text-slate-500"
+                        isDark ? "border-[#2A3854] bg-[#1A2234] text-slate-400" : "border-slate-200 bg-slate-50/50 text-slate-500"
                       }`}>
                         You do not have any flight bookings yet. Start planning your next journey.
                       </div>
@@ -475,7 +480,7 @@ const ProfilePage = () => {
                       hotelBookings.map((booking: any, index: any) => renderBookingCard(booking, index))
                     ) : (
                       <div className={`rounded-xl border border-dashed p-8 text-center text-xs ${
-                        isDark ? "border-[#24413D] bg-[#162624] text-[#A7BFBA]" : "border-slate-200 bg-slate-50/50 text-slate-500"
+                        isDark ? "border-[#2A3854] bg-[#1A2234] text-slate-400" : "border-slate-200 bg-slate-50/50 text-slate-500"
                       }`}>
                         You have no hotel bookings right now. Explore stays and create a new reservation.
                       </div>
@@ -489,7 +494,7 @@ const ProfilePage = () => {
                       refunds.map((refund) => <RefundStatusCard key={refund.id} refund={refund} />)
                     ) : (
                       <div className={`rounded-xl border border-dashed p-8 text-center text-xs ${
-                        isDark ? "border-[#24413D] bg-[#162624] text-[#A7BFBA]" : "border-slate-200 bg-slate-50/50 text-slate-500"
+                        isDark ? "border-[#2A3854] bg-[#1A2234] text-slate-400" : "border-slate-200 bg-slate-50/50 text-slate-500"
                       }`}>
                         No refund activity yet. Cancellations will appear here once they are processed.
                       </div>

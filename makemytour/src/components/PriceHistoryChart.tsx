@@ -20,7 +20,7 @@ const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: 
     if (history.length === 0) {
         return (
             <div className={`p-4 rounded-xl border transition-all duration-300 ${
-                isDark ? "bg-[#1A302C] border-[#24413D] text-[#7C948F]" : "bg-white border-[#E3ECE9] text-gray-500"
+                isDark ? "bg-[#121826] border-[#2A3854] text-[#94A3B8]" : "bg-white border-[#E2E8F0] text-gray-500"
             }`}>
                 <p className="text-sm">No price history available.</p>
             </div>
@@ -49,15 +49,15 @@ const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: 
         new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 
     // Thematic configurations mapping to your theme styles
-    const axisColor = isDark ? "#24413D" : "#E3ECE9";
-    const textPrimaryColor = isDark ? "#A7BFBA" : "#62807C";
-    const textSecondaryColor = isDark ? "#7C948F" : "#7C948F";
-    const chartColor = isDark ? "#7FD1C4" : "#3E6E6A";
-    const dotBorderColor = isDark ? "#1A302C" : "#ffffff";
+    const axisColor = isDark ? "#2A3854" : "#E2E8F0";
+    const textPrimaryColor = isDark ? "#94A3B8" : "#64748B";
+    const textSecondaryColor = isDark ? "#94A3B8" : "#94A3B8";
+    const chartColor = isDark ? "#818CF8" : "#4F46E5";
+    const dotBorderColor = isDark ? "#121826" : "#ffffff";
 
     return (
         <div className={`relative p-4 rounded-xl border transition-all duration-300 ${
-            isDark ? "bg-[#1A302C] border-[#24413D]" : "bg-white border-[#E3ECE9]"
+            isDark ? "bg-[#121826] border-[#2A3854]" : "bg-white border-[#E2E8F0]"
         }`}>
             <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
                 <line
@@ -76,10 +76,10 @@ const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: 
                 />
 
                 <text x={padding.left - 8} y={yFor(maxPrice) + 4} textAnchor="end" fontSize="10" fill={textPrimaryColor}>
-                    ₹{maxPrice.toLocaleString("en-IN")}
+                    â‚¹{maxPrice.toLocaleString("en-IN")}
                 </text>
                 <text x={padding.left - 8} y={yFor(minPrice) + 4} textAnchor="end" fontSize="10" fill={textPrimaryColor}>
-                    ₹{minPrice.toLocaleString("en-IN")}
+                    â‚¹{minPrice.toLocaleString("en-IN")}
                 </text>
 
                 <polygon points={areaPoints} fill={chartColor} fillOpacity={isDark ? "0.06" : "0.09"} />
@@ -112,8 +112,8 @@ const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: 
                 <div
                     className={`absolute text-xs px-2 py-1 rounded shadow-md pointer-events-none transition-all duration-300 border ${
                         isDark 
-                          ? "bg-[#162624] text-[#EAF2F0] border-[#24413D]" 
-                          : "bg-white text-[#1F3330] border-[#E3ECE9]"
+                          ? "bg-[#1A2234] text-[#F1F5F9] border-[#2A3854]" 
+                          : "bg-white text-[#0F172A] border-[#E2E8F0]"
                     }`}
                     style={{
                         left: `${(xFor(hoverIndex) / width) * 100}%`,
@@ -121,7 +121,7 @@ const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: 
                         transform: "translate(-50%, -130%)",
                     }}
                 >
-                    {formatShortDate(history[hoverIndex].date)}: ₹{history[hoverIndex].price.toLocaleString("en-IN")}
+                    {formatShortDate(history[hoverIndex].date)}: â‚¹{history[hoverIndex].price.toLocaleString("en-IN")}
                 </div>
             )}
         </div>

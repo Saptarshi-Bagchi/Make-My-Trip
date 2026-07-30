@@ -7,11 +7,11 @@ interface FlightStatusPanelProps {
 }
 
 const STATUS_STYLES: Record<FlightState, { bg: string; text: string; ring: string; icon: React.ElementType }> = {
-    "On Time": { bg: "bg-green-50", text: "text-green-700", ring: "ring-green-300", icon: Clock },
-    "Delayed": { bg: "bg-yellow-50", text: "text-yellow-700", ring: "ring-yellow-300", icon: AlertTriangle },
-    "Boarding": { bg: "bg-blue-50", text: "text-blue-700", ring: "ring-blue-300", icon: Users },
-    "Departed": { bg: "bg-indigo-50", text: "text-indigo-700", ring: "ring-indigo-300", icon: Plane },
-    "Landed": { bg: "bg-gray-100", text: "text-gray-700", ring: "ring-gray-300", icon: CheckCircle2 },
+    "On Time": { bg: "bg-emerald-50 dark:bg-emerald-500/10", text: "text-emerald-700 dark:text-emerald-300", ring: "ring-emerald-300 dark:ring-emerald-500/50", icon: Clock },
+    "Delayed": { bg: "bg-amber-50 dark:bg-amber-500/10", text: "text-amber-700 dark:text-amber-300", ring: "ring-amber-300 dark:ring-amber-500/50", icon: AlertTriangle },
+    "Boarding": { bg: "bg-blue-50 dark:bg-blue-500/10", text: "text-blue-700 dark:text-blue-300", ring: "ring-blue-300 dark:ring-blue-500/50", icon: Users },
+    "Departed": { bg: "bg-indigo-50 dark:bg-indigo-500/10", text: "text-indigo-700 dark:text-indigo-300", ring: "ring-indigo-300 dark:ring-indigo-500/50", icon: Plane },
+    "Landed": { bg: "bg-slate-100 dark:bg-slate-500/10", text: "text-slate-700 dark:text-slate-300", ring: "ring-slate-300 dark:ring-slate-500/50", icon: CheckCircle2 },
 };
 
 function formatRelativeTime(iso: string, nowTick: number): string {
@@ -59,7 +59,7 @@ const FlightStatusPanel = ({ status }: FlightStatusPanelProps) => {
 
     return (
         <div
-            className={`rounded-lg border border-gray-200 ${style.bg} p-3 transition-shadow duration-700 ${
+            className={`rounded-xl border border-slate-200 dark:border-[#2A3854] ${style.bg} p-3 transition-shadow duration-700 ${
                 justChanged ? `ring-2 ${style.ring}` : ""
             }`}
             aria-live="polite"
@@ -73,27 +73,27 @@ const FlightStatusPanel = ({ status }: FlightStatusPanelProps) => {
                             : status.status}
                     </span>
                 </div>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-slate-400">
                     Updated {formatRelativeTime(status.lastUpdated, nowTick)}
                 </span>
             </div>
 
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 {status.from || "Unknown"} → {status.to || "Unknown"}
             </p>
 
             {status.status === "Delayed" && status.reason && (
-                <p className="text-xs text-gray-500 mt-1">Reason: {status.reason}</p>
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Reason: {status.reason}</p>
             )}
 
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
                 <span>Departure: {formatClock(status.revisedDeparture)}</span>
                 <span>Estimated arrival: {formatClock(status.estimatedArrival)}</span>
             </div>
 
             {progressPercent !== null && (
                 <div className="mt-2">
-                    <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-[#2A3854]">
                         <div
                             className="h-full bg-indigo-400 rounded-full transition-all duration-1000 ease-linear"
                             style={{ width: `${progressPercent}%` }}

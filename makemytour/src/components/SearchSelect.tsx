@@ -30,15 +30,15 @@ export function SearchSelect({ options, placeholder, value, onChange, icon, subt
       <div
         className={`border rounded-lg px-4 py-3 cursor-pointer transition-colors ${
           isDark
-            ? "border-[#24413D] hover:border-[#7FD1C4]"
-            : "border-gray-300 hover:border-blue-500"
+            ? "border-[#2A3854] bg-[#1A2234]/70 hover:border-indigo-500"
+            : "border-slate-200 bg-white hover:border-indigo-500"
         }`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center space-x-2">
           {icon}
           <div className="flex-1 min-w-0 pr-3">
-            <div className={`text-sm truncate ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>
+            <div className={`text-sm truncate ${isDark ? "text-slate-400" : "text-slate-500"}`}>
               {placeholder}
             </div>
             <Input
@@ -57,11 +57,11 @@ export function SearchSelect({ options, placeholder, value, onChange, icon, subt
                 borderRadius: 0,
               }}
               className={`font-semibold w-full focus-visible:ring-0 focus-visible:ring-offset-0 ${
-                isDark ? "text-[#EAF2F0] placeholder:text-[#7C948F]" : "text-[#1F3330] placeholder:text-gray-400"
+                isDark ? "text-slate-100 placeholder:text-slate-400" : "text-slate-900 placeholder:text-slate-400"
               }`}
               placeholder={placeholder}
             />
-            <div className={`text-xs truncate ${isDark ? "text-[#62807C]" : "text-gray-400"}`}>
+            <div className={`text-xs truncate ${isDark ? "text-slate-500" : "text-slate-400"}`}>
               {subtitle}
             </div>
           </div>
@@ -70,7 +70,7 @@ export function SearchSelect({ options, placeholder, value, onChange, icon, subt
       {isOpen && (
         <div
           className={`absolute z-10 w-full mt-1 border rounded-md shadow-lg ${
-            isDark ? "bg-[#1A302C] border-[#24413D]" : "bg-white border-gray-300"
+            isDark ? "bg-[#121826] border-[#2A3854]" : "bg-white border-slate-200"
           }`}
         >
           <ScrollArea className="h-64">
@@ -80,8 +80,8 @@ export function SearchSelect({ options, placeholder, value, onChange, icon, subt
                   key={option.value}
                   className={`w-full justify-start font-normal ${
                     isDark
-                      ? "text-[#EAF2F0] hover:bg-[#24413D] hover:text-[#EAF2F0] focus:bg-[#24413D] focus:text-[#EAF2F0]"
-                      : "text-[#1F3330] hover:bg-gray-100 hover:text-[#1F3330]"
+                      ? "text-slate-100 hover:bg-[#1A2234] hover:text-white focus:bg-[#1A2234] focus:text-white"
+                      : "text-slate-900 hover:bg-slate-100 hover:text-slate-900"
                   }`}
                   variant="ghost"
                   onClick={() => {
@@ -94,7 +94,7 @@ export function SearchSelect({ options, placeholder, value, onChange, icon, subt
                 </Button>
               ))
             ) : (
-              <div className={`px-4 py-3 text-sm ${isDark ? "text-[#7C948F]" : "text-gray-400"}`}>
+              <div className={`px-4 py-3 text-sm ${isDark ? "text-slate-400" : "text-slate-400"}`}>
                 No matches found
               </div>
             )}

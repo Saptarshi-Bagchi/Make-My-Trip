@@ -45,11 +45,11 @@ const DynamicPricingCard = ({
 
     // Theme responsive styles matching your design guidelines
     const cardStyles = isDark 
-        ? "bg-[#1A302C] border-[#24413D] text-[#EAF2F0]" 
-        : "bg-white border-gray-200 text-[#22322F]";
+        ? "bg-[#121826] border-[#2A3854] text-[#F1F5F9]" 
+        : "bg-white border-gray-200 text-[#0F172A]";
 
     const freezeBannerStyles = isDark
-        ? "bg-[#162624] text-[#7FD1C4] border border-[#24413D]"
+        ? "bg-[#1A2234] text-[#818CF8] border border-[#2A3854]"
         : "bg-blue-50 text-blue-700";
 
     const reasonTagStyles = isDark
@@ -59,12 +59,12 @@ const DynamicPricingCard = ({
     return (
         <div className={`rounded-xl p-4 border transition-all duration-300 ${cardStyles}`}>
             <div className="flex items-center justify-between mb-2">
-                <div className={`flex items-center gap-2 text-sm font-semibold ${isDark ? "text-[#A7BFBA]" : "text-gray-700"}`}>
-                    <TrendingUp className={`w-4 h-4 ${isDark ? "text-[#7FD1C4]" : "text-blue-600"}`} />
+                <div className={`flex items-center gap-2 text-sm font-semibold ${isDark ? "text-[#94A3B8]" : "text-gray-700"}`}>
+                    <TrendingUp className={`w-4 h-4 ${isDark ? "text-[#818CF8]" : "text-blue-600"}`} />
                     <span>Live Price</span>
                 </div>
                 <span className="text-xl font-bold font-display">
-                    ₹ {displayPrice.toLocaleString("en-IN")}
+                    â‚¹ {displayPrice.toLocaleString("en-IN")}
                 </span>
             </div>
 
@@ -72,7 +72,7 @@ const DynamicPricingCard = ({
                 <div className={`flex items-center justify-between text-xs rounded-lg px-3 py-2 mb-2 ${freezeBannerStyles}`}>
                     <div className="flex items-center gap-1">
                         <Lock className="w-3.5 h-3.5" />
-                        <span>Price locked at ₹{freeze.price.toLocaleString("en-IN")}</span>
+                        <span>Price locked at â‚¹{freeze.price.toLocaleString("en-IN")}</span>
                     </div>
                     <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
@@ -95,8 +95,8 @@ const DynamicPricingCard = ({
             )}
 
             {!isFrozen && breakdown.reasons.length === 0 && (
-                <p className={`text-xs mb-2 ${isDark ? "text-[#7C948F]" : "text-gray-500"}`}>
-                    Standard pricing — no surge active right now.
+                <p className={`text-xs mb-2 ${isDark ? "text-[#94A3B8]" : "text-gray-500"}`}>
+                    Standard pricing â€” no surge active right now.
                 </p>
             )}
 
@@ -106,7 +106,7 @@ const DynamicPricingCard = ({
                         onClick={onUnfreeze}
                         className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-medium rounded-lg py-2 transition-colors ${
                             isDark 
-                                ? "text-[#EAF2F0] bg-[#24413D] hover:bg-[#2F5450]" 
+                                ? "text-[#F1F5F9] bg-[#2A3854] hover:bg-[#3730A3]" 
                                 : "text-gray-700 bg-gray-100 hover:bg-gray-200"
                         }`}
                     >
@@ -118,7 +118,7 @@ const DynamicPricingCard = ({
                         onClick={onFreeze}
                         className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-medium rounded-lg py-2 transition-colors ${
                             isDark 
-                                ? "text-[#162624] bg-[#7FD1C4] hover:bg-[#aef3e8]" 
+                                ? "text-[#1A2234] bg-[#818CF8] hover:bg-[#A5B4FC]" 
                                 : "text-blue-700 bg-blue-50 hover:bg-blue-100"
                         }`}
                     >
@@ -131,7 +131,7 @@ const DynamicPricingCard = ({
             <button
                 onClick={() => setShowHistory((v) => !v)}
                 className={`text-xs font-medium transition-colors ${
-                    isDark ? "text-[#7FD1C4] hover:text-[#aef3e8]" : "text-blue-600 hover:text-blue-700"
+                    isDark ? "text-[#818CF8] hover:text-[#A5B4FC]" : "text-blue-600 hover:text-blue-700"
                 }`}
             >
                 {showHistory ? "Hide price history" : "View price history"}

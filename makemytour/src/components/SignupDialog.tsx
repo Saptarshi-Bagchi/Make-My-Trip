@@ -70,18 +70,18 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                 style={systemFontStack}
                 className={`sm:max-w-[425px] border shadow-2xl rounded-2xl p-6 transition-colors ${
                     isDark 
-                        ? "bg-[#14211F] border-[#24413D] text-[#EAF2F0]" 
-                        : "bg-white border-[#E3ECE9] text-[#1F3330]"
+                        ? "bg-[#121826] border-[#2A3854] text-[#F1F5F9]" 
+                        : "bg-white border-[#E2E8F0] text-[#0F172A]"
                 }`}
             >
                 <DialogHeader className="space-y-1.5">
                     <DialogTitle 
                         style={{ fontFamily: "'Fraunces', serif" }}
-                        className={`text-2xl font-semibold tracking-tight ${isDark ? "text-[#EAF2F0]" : "text-[#1F3330]"}`}
+                        className={`text-2xl font-semibold tracking-tight ${isDark ? "text-[#F1F5F9]" : "text-[#0F172A]"}`}
                     >
                         {isSignup ? "Create Account" : "Welcome Back"}
                     </DialogTitle>
-                    <DialogDescription className={`text-xs ${isDark ? "text-[#7FA39D]" : "text-gray-500"}`}>
+                    <DialogDescription className={`text-xs ${isDark ? "text-[#94A3B8]" : "text-gray-500"}`}>
                         {isSignup
                             ? "Join us to start booking your travels"
                             : "Enter your credentials to access your account"}
@@ -91,7 +91,7 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                     {isSignup && (
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="firstname" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#7FA39D]" : "text-gray-600"}`}>
+                                <Label htmlFor="firstname" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#94A3B8]" : "text-gray-600"}`}>
                                     First Name
                                 </Label>
                                 <Input
@@ -102,13 +102,13 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                                     style={systemFontStack}
                                     className={`rounded-xl text-sm transition-colors ${
                                         isDark 
-                                            ? "bg-[#1B2E2B] border-[#2C504D] text-[#EAF2F0] placeholder:text-[#5B7973] focus:border-[#7FD1C4]" 
-                                            : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]"
+                                            ? "bg-[#1A2234] border-[#4338CA] text-[#F1F5F9] placeholder:text-[#64748B] focus:border-[#818CF8]" 
+                                            : "bg-white border-[#E2E8F0] text-[#0F172A] focus:border-[#4F46E5]"
                                     }`}
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <Label htmlFor="lastName" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#7FA39D]" : "text-gray-600"}`}>
+                                <Label htmlFor="lastName" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#94A3B8]" : "text-gray-600"}`}>
                                     Last Name
                                 </Label>
                                 <Input
@@ -119,15 +119,15 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                                     style={systemFontStack}
                                     className={`rounded-xl text-sm transition-colors ${
                                         isDark 
-                                            ? "bg-[#1B2E2B] border-[#2C504D] text-[#EAF2F0] placeholder:text-[#5B7973] focus:border-[#7FD1C4]" 
-                                            : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]"
+                                            ? "bg-[#1A2234] border-[#4338CA] text-[#F1F5F9] placeholder:text-[#64748B] focus:border-[#818CF8]" 
+                                            : "bg-white border-[#E2E8F0] text-[#0F172A] focus:border-[#4F46E5]"
                                     }`}
                                 />
                             </div>
                         </div>
                     )}
                     <div className="space-y-1.5">
-                        <Label htmlFor="email" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#7FA39D]" : "text-gray-600"}`}>
+                        <Label htmlFor="email" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#94A3B8]" : "text-gray-600"}`}>
                             Email
                         </Label>
                         <Input
@@ -139,13 +139,13 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                             style={systemFontStack}
                             className={`rounded-xl text-sm transition-colors ${
                                 isDark 
-                                    ? "bg-[#1B2E2B] border-[#2C504D] text-[#EAF2F0] placeholder:text-[#5B7973] focus:border-[#7FD1C4]" 
-                                    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]"
+                                    ? "bg-[#1A2234] border-[#4338CA] text-[#F1F5F9] placeholder:text-[#64748B] focus:border-[#818CF8]" 
+                                    : "bg-white border-[#E2E8F0] text-[#0F172A] focus:border-[#4F46E5]"
                             }`}
                         />
                     </div>
                     <div className="space-y-1.5">
-                        <Label htmlFor="password" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#7FA39D]" : "text-gray-600"}`}>
+                        <Label htmlFor="password" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#94A3B8]" : "text-gray-600"}`}>
                             Password
                         </Label>
                         <Input
@@ -157,14 +157,14 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                             style={systemFontStack}
                             className={`rounded-xl text-sm transition-colors ${
                                 isDark 
-                                    ? "bg-[#1B2E2B] border-[#2C504D] text-[#EAF2F0] placeholder:text-[#5B7973] focus:border-[#7FD1C4]" 
-                                    : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]"
+                                    ? "bg-[#1A2234] border-[#4338CA] text-[#F1F5F9] placeholder:text-[#64748B] focus:border-[#818CF8]" 
+                                    : "bg-white border-[#E2E8F0] text-[#0F172A] focus:border-[#4F46E5]"
                             }`}
                         />
                     </div>
                     {isSignup && (
                         <div className="space-y-1.5">
-                            <Label htmlFor="phoneNumber" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#7FA39D]" : "text-gray-600"}`}>
+                            <Label htmlFor="phoneNumber" className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-[#94A3B8]" : "text-gray-600"}`}>
                                 Phone Number
                             </Label>
                             <Input
@@ -176,8 +176,8 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                                 style={systemFontStack}
                                 className={`rounded-xl text-sm transition-colors ${
                                     isDark 
-                                        ? "bg-[#1B2E2B] border-[#2C504D] text-[#EAF2F0] placeholder:text-[#5B7973] focus:border-[#7FD1C4]" 
-                                        : "bg-white border-[#DCE7E4] text-[#1F3330] focus:border-[#3E6E6A]"
+                                        ? "bg-[#1A2234] border-[#4338CA] text-[#F1F5F9] placeholder:text-[#64748B] focus:border-[#818CF8]" 
+                                        : "bg-white border-[#E2E8F0] text-[#0F172A] focus:border-[#4F46E5]"
                                 }`}
                             />
                         </div>
@@ -186,7 +186,7 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                     <Button
                         type="submit"
                         style={systemFontStack}
-                        className="w-full bg-[#3E6E6A] text-white hover:bg-[#2C504D] rounded-xl py-2.5 text-sm font-semibold shadow-sm transition-all mt-2"
+                        className="w-full bg-[#4F46E5] text-white hover:bg-[#4338CA] rounded-xl py-2.5 text-sm font-semibold shadow-sm transition-all mt-2"
                         variant="default"
                         disabled={isSubmitting}
                     >
@@ -195,14 +195,14 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                             : (isSignup ? "Sign Up" : "Login")}
                     </Button>
                 </form>
-                <div className={`text-center text-sm ${isDark ? "text-[#A7BFBA]" : "text-gray-600"}`}>
+                <div className={`text-center text-sm ${isDark ? "text-[#94A3B8]" : "text-gray-600"}`}>
                     {isSignup ? (
                         <>
                             Already have an account?{" "}
                             <Button
                                 variant="link"
                                 style={systemFontStack}
-                                className={`p-0 font-medium ${isDark ? "text-[#7FD1C4] hover:text-[#aef3e8]" : "text-[#3E6E6A]"}`}
+                                className={`p-0 font-medium ${isDark ? "text-[#818CF8] hover:text-[#A5B4FC]" : "text-[#4F46E5]"}`}
                                 onClick={() => switchMode(false)}
                             >
                                 Login
@@ -214,7 +214,7 @@ const SignupDialog = ({ trigger }: SignupDialogProps) => {
                             <Button
                                 variant="link"
                                 style={systemFontStack}
-                                className={`p-0 font-medium ${isDark ? "text-[#7FD1C4] hover:text-[#aef3e8]" : "text-[#3E6E6A]"}`}
+                                className={`p-0 font-medium ${isDark ? "text-[#818CF8] hover:text-[#A5B4FC]" : "text-[#4F46E5]"}`}
                                 onClick={() => switchMode(true)}
                             >
                                 Sign Up

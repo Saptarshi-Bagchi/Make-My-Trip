@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "https://make-my-trip-backend-an20.onrender.com"
+const BACKEND_URL = "http://localhost:8080"
 
 export const login = async (email, password) => {
   try {
@@ -263,13 +263,24 @@ export const handlehotelbooking = async (userId, hotelId, rooms, price, roomType
   }
 };
 
-export const cancelBooking = async (userId, index) => {
+export const cancelBooking = async (userId, index, refund) => {
   try {
     const url = `${BACKEND_URL}/booking/cancel?userId=${userId}&index=${index}`;
-    const res = await axios.post(url);
+    const res = await axios.post(url, refund);
     const data = res.data;
     return data;
   } catch (error) {
     throw error;
+  }
+};
+
+export const getUserRefunds = async (userId) => {
+  try {
+    const res = await axios.get(`${BACKEND_URL}/user/${userId}/refunds`);
+    return res.data;
+  } catch {
+    // Refunds are supplementary profile data. Keep the profile usable while
+    // the API is restarting or temporarily unavailable.
+    return null;
   }
 };
