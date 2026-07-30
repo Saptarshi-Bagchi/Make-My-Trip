@@ -76,10 +76,10 @@ const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: 
                 />
 
                 <text x={padding.left - 8} y={yFor(maxPrice) + 4} textAnchor="end" fontSize="10" fill={textPrimaryColor}>
-                    â‚¹{maxPrice.toLocaleString("en-IN")}
+                    ₹{maxPrice.toLocaleString("en-IN")}
                 </text>
                 <text x={padding.left - 8} y={yFor(minPrice) + 4} textAnchor="end" fontSize="10" fill={textPrimaryColor}>
-                    â‚¹{minPrice.toLocaleString("en-IN")}
+                    ₹{minPrice.toLocaleString("en-IN")}
                 </text>
 
                 <polygon points={areaPoints} fill={chartColor} fillOpacity={isDark ? "0.06" : "0.09"} />
@@ -121,7 +121,7 @@ const PriceHistoryChart = ({ history, width = 320, height = 140, forcedTheme }: 
                         transform: "translate(-50%, -130%)",
                     }}
                 >
-                    {formatShortDate(history[hoverIndex].date)}: â‚¹{history[hoverIndex].price.toLocaleString("en-IN")}
+                    {formatShortDate(history[hoverIndex].date)}: ₹{history[hoverIndex].price.toLocaleString("en-IN")}
                 </div>
             )}
         </div>

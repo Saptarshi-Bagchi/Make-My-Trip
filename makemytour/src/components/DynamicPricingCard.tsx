@@ -64,7 +64,7 @@ const DynamicPricingCard = ({
                     <span>Live Price</span>
                 </div>
                 <span className="text-xl font-bold font-display">
-                    â‚¹ {displayPrice.toLocaleString("en-IN")}
+                    ₹ {displayPrice.toLocaleString("en-IN")}
                 </span>
             </div>
 
@@ -72,7 +72,7 @@ const DynamicPricingCard = ({
                 <div className={`flex items-center justify-between text-xs rounded-lg px-3 py-2 mb-2 ${freezeBannerStyles}`}>
                     <div className="flex items-center gap-1">
                         <Lock className="w-3.5 h-3.5" />
-                        <span>Price locked at â‚¹{freeze.price.toLocaleString("en-IN")}</span>
+                        <span>Price locked at ₹{freeze.price.toLocaleString("en-IN")}</span>
                     </div>
                     <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
