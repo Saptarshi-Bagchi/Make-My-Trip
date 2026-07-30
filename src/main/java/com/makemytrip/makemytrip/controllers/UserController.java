@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.makemytrip.makemytrip.models.Users;
 import com.makemytrip.makemytrip.services.UserServices;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -29,6 +30,10 @@ public class UserController {
             return ResponseEntity.ok(user);
         }
         return ResponseEntity.notFound().build();
+    }
+    @GetMapping("/{id}/refunds")
+    public List<Users.Refund> getRefunds(@PathVariable String id) {
+        return userServices.getRefunds(id);
     }
     @PostMapping("/edit")
     public Users editprofile(@RequestParam String id ,@RequestBody Users updatedUser){

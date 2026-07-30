@@ -8,6 +8,21 @@ import com.makemytrip.makemytrip.services.BookingService;
 @RestController
 @RequestMapping("/booking")
 public class BookingController {
+    public static class CancelBookingRequest {
+        private String reason;
+        private double refundAmount;
+        private double refundPercentage;
+        private String label;
+
+        public String getReason() { return reason; }
+        public void setReason(String reason) { this.reason = reason; }
+        public double getRefundAmount() { return refundAmount; }
+        public void setRefundAmount(double refundAmount) { this.refundAmount = refundAmount; }
+        public double getRefundPercentage() { return refundPercentage; }
+        public void setRefundPercentage(double refundPercentage) { this.refundPercentage = refundPercentage; }
+        public String getLabel() { return label; }
+        public void setLabel(String label) { this.label = label; }
+    }
     @Autowired
     private BookingService bookingService;
 
@@ -20,7 +35,7 @@ public class BookingController {
         return bookingService.bookhotel(userId,hotelId,rooms,price,roomType);
     }
     @PostMapping("/cancel")
-    public Users.Booking cancelBooking(@RequestParam String userId, @RequestParam int index){
-        return bookingService.cancelBooking(userId, index);
+    public Users cancelBooking(@RequestParam String userId, @RequestParam int index, @RequestBody CancelBookingRequest request){
+        return bookingService.cancelBooking(userId, index, request.getReason(), request.getRefundAmount(), request.getRefundPercentage(), request.getLabel());
     }
 }

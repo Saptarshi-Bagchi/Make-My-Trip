@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class BookingService {
@@ -80,7 +82,7 @@ public class BookingService {
     }
 
     @SuppressWarnings("null")
-    public Booking cancelBooking(String userId, int index) {
+    public Users cancelBooking(String userId, int index, String reason, double refundAmount, double refundPercentage, String label) {
         Optional<Users> usersOptional = userRepository.findById(userId);
         if (!usersOptional.isPresent()) {
             throw new RuntimeException("User not found");
@@ -113,8 +115,19 @@ public class BookingService {
 
         bookings.remove(index);
         user.setBookings(bookings);
-        userRepository.save(user);
-        return booking;
+
+        Users.Refund refund = new Users.Refund();
+        refund.setId(UUID.randomUUID().toString());
+        refund.setEntityType("Flight".equals(booking.getType()) ? "flight" : "hotel");
+        refund.setLabel(label == null || label.isBlank() ? booking.getType() + " booking " + booking.getBookingId() : label);
+        refund.setReason(reason);
+        refund.setOriginalAmount(booking.getTotalPrice());
+        refund.setRefundAmount(refundAmount);
+        refund.setRefundPercentage(refundPercentage);
+        refund.setCanceledAt(Instant.now().toString());
+        user.getRefunds().add(refund);
+
+        return userRepository.save(user);
     }
 
 }

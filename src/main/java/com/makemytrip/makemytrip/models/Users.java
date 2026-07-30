@@ -17,6 +17,7 @@ public class Users {
     private String role;
     private String phoneNumber;
     private List<Booking> bookings = new ArrayList<>();;
+    private List<Refund> refunds = new ArrayList<>();
 
     public String getId() {return _id;}
 
@@ -40,6 +41,12 @@ public class Users {
 
     public List<Booking> getBookings() {return bookings;}
     public void setBookings(List<Booking> bookings) {this.bookings = bookings;}
+
+    public List<Refund> getRefunds() {
+        if (refunds == null) refunds = new ArrayList<>();
+        return refunds;
+    }
+    public void setRefunds(List<Refund> refunds) {this.refunds = refunds;}
 
     public static class Booking {
         private String type;
@@ -70,5 +77,33 @@ public class Users {
 
         public String getRoomType() {return roomType;}
         public void setRoomType(String roomType) {this.roomType = roomType;}
+    }
+
+    public static class Refund {
+        private String id;
+        private String entityType;
+        private String label;
+        private String reason;
+        private double originalAmount;
+        private double refundAmount;
+        private double refundPercentage;
+        private String canceledAt;
+
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+        public String getEntityType() { return entityType; }
+        public void setEntityType(String entityType) { this.entityType = entityType; }
+        public String getLabel() { return label; }
+        public void setLabel(String label) { this.label = label; }
+        public String getReason() { return reason; }
+        public void setReason(String reason) { this.reason = reason; }
+        public double getOriginalAmount() { return originalAmount; }
+        public void setOriginalAmount(double originalAmount) { this.originalAmount = originalAmount; }
+        public double getRefundAmount() { return refundAmount; }
+        public void setRefundAmount(double refundAmount) { this.refundAmount = refundAmount; }
+        public double getRefundPercentage() { return refundPercentage; }
+        public void setRefundPercentage(double refundPercentage) { this.refundPercentage = refundPercentage; }
+        public String getCanceledAt() { return canceledAt; }
+        public void setCanceledAt(String canceledAt) { this.canceledAt = canceledAt; }
     }
 }
